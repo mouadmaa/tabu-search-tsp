@@ -1,9 +1,9 @@
-# Traveling Salesman Problem - Morocco
+# Morocco Cities Visualization for TSP
 
-A Python implementation of the Traveling Salesman Problem (TSP) using Tabu Search algorithm, with an application to finding optimal routes between Moroccan cities.
+A Python project for visualizing Moroccan cities as part of a Traveling Salesman Problem (TSP) solution.
 
 ## Overview
 
-This project provides a modular implementation of the Tabu Search algorithm for solving the Traveling Salesman Problem. The application specifically focuses on finding an optimal route to visit all major cities in Morocco, visualizing both the cities and the resulting route on a map-like display.
+This project provides a modular implementation for visualizing major cities in Morocco. This is the first step toward solving the Traveling Salesman Problem, showing the geographic distribution of cities before calculating optimal routes between them.
 
 ## Project Structure

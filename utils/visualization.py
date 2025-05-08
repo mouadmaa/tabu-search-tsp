@@ -1,19 +1,17 @@
 """
 Visualization module for the Traveling Salesman Problem.
 
-This module provides functions to visualize cities on a map and
-plot TSP routes/solutions in an informative and visually appealing way.
+This module provides functions to visualize cities on a map.
 """
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-def visualize_cities(cities, city_names=None, title="Traveling Salesman Problem: Morocco", 
-                    save_to_file=False, filename="morocco_tsp.png", route=None):
+def visualize_cities(cities, city_names=None, title="Moroccan Cities", 
+                    save_to_file=False, filename="morocco_cities.png", route=None):
     """
     Visualize the cities on a map-like display. Can display interactively or save to file.
-    Optionally shows a TSP route connecting the cities.
     
     Args:
         cities (numpy.ndarray): Array of shape (num_cities, 2) with city coordinates
@@ -21,7 +19,7 @@ def visualize_cities(cities, city_names=None, title="Traveling Salesman Problem:
         title (str): Plot title
         save_to_file (bool): Whether to save the plot to a file instead of displaying
         filename (str): Filename to save the plot if save_to_file is True
-        route (list, optional): List of city indices representing a TSP route
+        route (list, optional): List of city indices representing a TSP route (not used yet)
     """
     # Create a figure with more appropriate size
     plt.figure(figsize=(14, 12))
@@ -38,19 +36,6 @@ def visualize_cities(cities, city_names=None, title="Traveling Salesman Problem:
     # Add some contextual elements to make it look more like a map
     plt.fill_betweenx([min_lat, max_lat], min_lon - 5, min_lon, 
                      color='lightskyblue', alpha=0.5, zorder=0)
-    
-    # If a route is provided, plot the route lines first (so cities appear on top)
-    if route is not None:
-        # Add the route as lines connecting the cities
-        route_x = [cities[i, 0] for i in route]
-        route_y = [cities[i, 1] for i in route]
-        
-        # Add the last connection back to the starting city to complete the tour
-        route_x.append(route_x[0])
-        route_y.append(route_y[0])
-        
-        # Plot the route
-        plt.plot(route_x, route_y, 'g-', linewidth=1.5, alpha=0.8, zorder=2)
     
     # Create the scatter plot with enhanced styling
     plt.scatter(cities[:, 0], cities[:, 1], c='red', s=150, edgecolor='black', zorder=3, alpha=0.8)
@@ -115,32 +100,3 @@ def visualize_cities(cities, city_names=None, title="Traveling Salesman Problem:
             plt.savefig(filename)
             plt.close()
             print(f"City plot saved to {filename}")
-
-
-def plot_performance(iterations, distances, best_distances=None, title="TSP Optimization Progress"):
-    """
-    Plot the performance of the optimization algorithm over iterations.
-    
-    Args:
-        iterations (list): List of iteration numbers
-        distances (list): List of distances at each iteration
-        best_distances (list, optional): List of best distances found so far at each iteration
-        title (str): Plot title
-    """
-    plt.figure(figsize=(12, 6))
-    
-    # Plot the current solution distance at each iteration
-    plt.plot(iterations, distances, 'b-', alpha=0.5, label='Current Solution')
-    
-    # If best distances are provided, plot them as well
-    if best_distances:
-        plt.plot(iterations, best_distances, 'r-', linewidth=2, label='Best Solution')
-    
-    plt.title(title, fontsize=14, fontweight='bold')
-    plt.xlabel('Iteration', fontsize=12)
-    plt.ylabel('Total Distance', fontsize=12)
-    plt.grid(True, linestyle='--', alpha=0.7)
-    plt.legend()
-    
-    plt.tight_layout()
-    plt.show()

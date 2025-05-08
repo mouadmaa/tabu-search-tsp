@@ -1,8 +1,7 @@
 """
 Distance calculation module for the Traveling Salesman Problem.
 
-This module provides functions to compute distances between cities
-and calculate the total distance of TSP routes.
+This module provides functions to compute distances between cities.
 """
 
 import numpy as np
@@ -30,25 +29,3 @@ def compute_distance_matrix(cities):
                 )
     
     return distance_matrix
-
-
-def calculate_route_distance(route, distance_matrix):
-    """
-    Calculate the total distance of a TSP route.
-    
-    Args:
-        route (list): List of city indices representing a route
-        distance_matrix (numpy.ndarray): Distance matrix between cities
-        
-    Returns:
-        float: Total distance of the route
-    """
-    total_distance = 0
-    num_cities = len(route)
-    
-    for i in range(num_cities):
-        from_city = route[i]
-        to_city = route[(i + 1) % num_cities]  # Wrap around to the first city
-        total_distance += distance_matrix[from_city, to_city]
-    
-    return total_distance
