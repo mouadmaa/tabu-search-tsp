@@ -7,50 +7,32 @@ on a map for the Traveling Salesman Problem.
 """
 
 import numpy as np
-import argparse
 
 # Import modules from the project structure
-from data.cities import get_morocco_cities, morocco_cities_to_array
+from utils.cli import parse_arguments
+from data.cities import get_cities, cities_to_array
 from core.distance import compute_distance_matrix
 from utils.visualization import visualize_cities
-
-
-def parse_arguments():
-    """
-    Parse command line arguments.
-    
-    Returns:
-        argparse.Namespace: Parsed arguments
-    """
-    parser = argparse.ArgumentParser(description='Visualize Moroccan cities for the Traveling Salesman Problem')
-    
-    parser.add_argument('--save-plot', action='store_true',
-                        help='Save the visualization to a file instead of displaying it')
-    parser.add_argument('--output', type=str, default='morocco_cities.png',
-                        help='Output filename for the visualization (if --save-plot is used)')
-    parser.add_argument('--verbose', action='store_true',
-                        help='Print detailed progress information')
-    
-    return parser.parse_args()
 
 
 def main():
     """
     Main function to display Moroccan cities on a map.
     """
+
     # Parse command line arguments
     args = parse_arguments()
-    
-    # Print welcome message
+
+    # Print a welcome message
     print("=" * 80)
     print("Morocco Cities Visualization for Traveling Salesman Problem")
     print("=" * 80)
     
     # Load Moroccan cities
     print("\nLoading Moroccan city data...")
-    morocco_cities_dict = get_morocco_cities()
-    cities, city_names = morocco_cities_to_array(morocco_cities_dict)
-    
+    morocco_cities_dict = get_cities()
+    cities, city_names = cities_to_array(morocco_cities_dict)
+
     print(f"Loaded {len(city_names)} Moroccan cities for TSP:")
     for i, name in enumerate(city_names):
         print(f"  {i}: {name} at (longitude, latitude): ({cities[i, 0]:.2f}, {cities[i, 1]:.2f})")
