@@ -106,7 +106,7 @@ def compute_distance_matrix(cities):
     
     return distance_matrix
 
-def visualize_cities(cities, title="Traveling Salesman Problem: Major Cities of Morocco", save_to_file=False, filename="morocco_tsp.png", city_names=None):
+def visualize_cities(cities, title="Traveling Salesman Problem: Morocco", save_to_file=False, filename="morocco_tsp.png", city_names=None):
     """
     Visualize the cities on a map-like display. Can display interactively or save to file.
     
@@ -123,7 +123,7 @@ def visualize_cities(cities, title="Traveling Salesman Problem: Major Cities of 
     # Create the scatter plot with enhanced styling
     plt.scatter(cities[:, 0], cities[:, 1], c='red', s=150, edgecolor='black', zorder=3, alpha=0.8)
     
-    # Add city names with better styling
+    # Add city names with better styling and transparency
     for i, (x, y) in enumerate(cities):
         label = city_names[i] if city_names else str(i)
         plt.annotate(label, (x, y), 
@@ -131,10 +131,11 @@ def visualize_cities(cities, title="Traveling Salesman Problem: Major Cities of 
                      textcoords='offset points', 
                      fontsize=11,
                      fontweight='bold',
-                     bbox=dict(boxstyle="round,pad=0.4", fc="white", ec="gray", alpha=0.9))
+                     alpha=0.7,  # Make the text slightly transparent
+                     bbox=dict(boxstyle="round,pad=0.4", fc="white", ec="gray", alpha=0.6))  # More transparent background
     
     # Use a descriptive title with larger font size
-    plt.title(title, fontsize=16, fontweight='bold', pad=20)
+    plt.title(title, fontsize=16, fontweight='bold', pad=10)
     
     # Change axis labels to longitude and latitude
     plt.xlabel("Longitude (°)", fontsize=12)
@@ -146,13 +147,13 @@ def visualize_cities(cities, title="Traveling Salesman Problem: Major Cities of 
     # Add a light blue background to represent water/ocean
     plt.axhspan(-20, 40, facecolor='lightskyblue', alpha=0.3, zorder=0)
     
-    # Calculate min and max coordinates to set appropriate limits with a margin
-    min_lon = min(cities[:, 0]) - 0.6
-    max_lon = max(cities[:, 0]) + 0.6
-    min_lat = min(cities[:, 1]) - 0.6
-    max_lat = max(cities[:, 1]) + 0.6
+    # Calculate min and max coordinates to set appropriate limits with a modest margin
+    min_lon = min(cities[:, 0]) - 0.7
+    max_lon = max(cities[:, 0]) + 0.7
+    min_lat = min(cities[:, 1]) - 0.7
+    max_lat = max(cities[:, 1]) + 0.7
     
-    # Set the axis limits to focus on the cities
+    # Set the axis limits to focus more on the cities
     plt.xlim(min_lon, max_lon)
     plt.ylim(min_lat, max_lat)
     
@@ -180,9 +181,9 @@ def visualize_cities(cities, title="Traveling Salesman Problem: Major Cities of 
     plt.text(compass_x, compass_y + arrow_length/2 + 0.05, 'N', 
              fontsize=10, ha='center', va='center', fontweight='bold', zorder=4)
     
-    # Automatically adjust the plot to show all labels clearly
-    plt.tight_layout()
-    
+    # Add more margin space around the entire plot
+    plt.tight_layout(pad=2)
+
     if save_to_file:
         plt.savefig(filename)
         plt.close()
@@ -200,18 +201,21 @@ if __name__ == "__main__":
     # Use predefined Moroccan cities instead of random generation
     morocco_cities_dict = get_morocco_cities()
     cities, city_names = morocco_cities_to_array(morocco_cities_dict)
-    
+
     print(f"Moroccan cities for TSP simulation ({len(city_names)} cities):")
     for i, name in enumerate(city_names):
         print(f"{i}: {name} at (longitude, latitude): {cities[i]}")
-    
+
     # Compute distance matrix
     distance_matrix = compute_distance_matrix(cities)
     print("\nDistance Matrix (first 5x5 entries):")
     print(distance_matrix[:5, :5])
-    
+
     print(f"\nDisplaying {len(city_names)} Moroccan cities for TSP...")
     # Try to display visualization interactively
     # If you encounter errors, set save_to_file=True
-    visualize_cities(cities, title="Traveling Salesman Problem: Major Cities of Morocco", 
+    visualize_cities(cities, title="Traveling Salesman Problem: Morocco",
                     save_to_file=False, city_names=city_names)
+
+    # Example: To save to file instead of displaying, use:
+    # visualize_cities(cities, save_to_file=True, filename="morocco_map.png", city_names=city_names)
