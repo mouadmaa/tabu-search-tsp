@@ -5,7 +5,6 @@ This module provides functions to visualize cities on a map.
 """
 
 import matplotlib.pyplot as plt
-import numpy as np
 
 
 def visualize_cities(cities, city_names=None, title="Moroccan Cities", 
@@ -21,24 +20,24 @@ def visualize_cities(cities, city_names=None, title="Moroccan Cities",
         filename (str): Filename to save the plot if save_to_file is True
         route (list, optional): List of city indices representing a TSP route (not used yet)
     """
-    # Create a figure with more appropriate size
+    # Create a figure with the more appropriate size
     plt.figure(figsize=(14, 12))
     
     # Add a light blue background to represent water/ocean
-    plt.axhspan(-20, 40, facecolor='lightskyblue', alpha=0.3, zorder=0)
+    plt.axhspan(-20, 40, facecolor='lightskyblue', alpha=0.2, zorder=0)
     
     # Calculate min and max coordinates to set appropriate limits with a modest margin
     min_lon = min(cities[:, 0]) - 0.7
-    max_lon = max(cities[:, 0]) + 0.7
+    max_lon = max(cities[:, 0]) + 0.9
     min_lat = min(cities[:, 1]) - 0.7
     max_lat = max(cities[:, 1]) + 0.7
     
     # Add some contextual elements to make it look more like a map
     plt.fill_betweenx([min_lat, max_lat], min_lon - 5, min_lon, 
-                     color='lightskyblue', alpha=0.5, zorder=0)
+                     color='lightskyblue', alpha=0.2, zorder=0)
     
     # Create the scatter plot with enhanced styling
-    plt.scatter(cities[:, 0], cities[:, 1], c='red', s=150, edgecolor='black', zorder=3, alpha=0.8)
+    plt.scatter(cities[:, 0], cities[:, 1], c='red', s=150, edgecolor='black', zorder=3, alpha=0.7)
     
     # Add city names with better styling and transparency
     for i, (x, y) in enumerate(cities):
@@ -49,9 +48,9 @@ def visualize_cities(cities, city_names=None, title="Moroccan Cities",
                      fontsize=11,
                      fontweight='bold',
                      alpha=0.7,  # Make the text slightly transparent
-                     bbox=dict(boxstyle="round,pad=0.4", fc="white", ec="gray", alpha=0.6))  # More transparent background
+                     bbox=dict(boxstyle="round,pad=0.4", fc="white", ec="gray", alpha=0.4))  # More transparent background
     
-    # Use a descriptive title with larger font size
+    # Use a descriptive title with a larger font size
     plt.title(title, fontsize=16, fontweight='bold', pad=10)
     
     # Change axis labels to longitude and latitude
@@ -59,7 +58,7 @@ def visualize_cities(cities, city_names=None, title="Moroccan Cities",
     plt.ylabel("Latitude (°)", fontsize=12)
     
     # Add a grid for better geographical reference
-    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.grid(True, linestyle='--', alpha=0.4)
     
     # Set the axis limits to focus more on the cities
     plt.xlim(min_lon, max_lon)
@@ -71,13 +70,13 @@ def visualize_cities(cities, city_names=None, title="Moroccan Cities",
     compass_y = max_lat - (max_lat - min_lat) * 0.15  # Position near top
     
     # Small white background circle
-    compass_circle = plt.Circle((compass_x, compass_y), arrow_length * 0.6, 
-                               fc='white', ec='lightgray', alpha=0.6, zorder=3)
+    compass_circle = plt.Circle((compass_x, compass_y), arrow_length * 0.9,
+                               fc='white', ec='lightgray', alpha=0.5, zorder=3)
     plt.gca().add_patch(compass_circle)
     
     # Simple north arrow
     plt.arrow(compass_x, compass_y - arrow_length/2, 0, arrow_length, 
-              head_width=0.12, head_length=0.15, 
+              head_width=0.1, head_length=0.1,
               fc='black', ec='black', zorder=4, 
               length_includes_head=True, width=0.02)
     
