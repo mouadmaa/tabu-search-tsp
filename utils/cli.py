@@ -21,5 +21,7 @@ def parse_arguments():
                        help='Output filename for the visualization (if --save-plot is used)')
     parser.add_argument('--verbose', action='store_true',
                        help='Print detailed progress information')
+    parser.add_argument('--start-city', type=int, 
+                       help='Starting city index for the nearest neighbor tour (random if not specified)')
 
     return parser.parse_args()

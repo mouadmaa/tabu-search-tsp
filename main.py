@@ -12,6 +12,7 @@ import numpy as np
 from utils.cli import parse_arguments
 from data.cities import get_cities, cities_to_array
 from core.distance import compute_distance_matrix
+from core.tour_initialization import nearest_neighbor_tour
 from utils.visualization import visualize_cities
 
 
@@ -30,16 +31,16 @@ def main():
     
     # Load Moroccan cities
     print("\nLoading Moroccan city data...")
-    morocco_cities_dict = get_cities()
-    cities, city_names = cities_to_array(morocco_cities_dict)
+    cities_dict, num_cities = get_cities()
+    cities_coordinates, cities_names = cities_to_array(cities_dict)
 
-    print(f"Loaded {len(city_names)} Moroccan cities for TSP:")
-    for i, name in enumerate(city_names):
-        print(f"  {i}: {name} at (longitude, latitude): ({cities[i, 0]:.2f}, {cities[i, 1]:.2f})")
+    print(f"Loaded {num_cities} Moroccan cities for TSP:")
+    for i, name in enumerate(cities_names):
+        print(f"  {i}: {name} at (longitude, latitude): ({cities_coordinates[i, 0]:.2f}, {cities_coordinates[i, 1]:.2f})")
     
     # Compute distance matrix
     print("\nComputing distance matrix...")
-    distance_matrix = compute_distance_matrix(cities)
+    distance_matrix = compute_distance_matrix(cities_coordinates)
     print("Distance matrix computed.")
     
     if args.verbose:
@@ -47,14 +48,32 @@ def main():
         np.set_printoptions(precision=2, suppress=True)
         print(distance_matrix[:5, :5])
     
-    # Visualize the cities on a map (without any route yet)
-    print("\nVisualizing Moroccan cities...")
+    # Generate initial tour using nearest neighbor heuristic
+    print("\nGenerating nearest neighbor tour...")
+    
+    # Use a specified start city if provided, otherwise random
+    start_city = args.start_city
+    if start_city is not None:
+        if start_city < 0 or start_city >= num_cities:
+            print(f"Warning: Start city index {start_city} is out of range (0-{num_cities-1}). Using random start city.")
+            start_city = None
+        else:
+            print(f"Using city {start_city} ({cities_names[start_city]}) as starting point.")
+    
+    # Generate a tour using the nearest neighbor heuristic
+    tour = nearest_neighbor_tour(distance_matrix, start_city)
+    print(f"Nearest Neighbor Tour: {tour}")
+    print(f"Starting City: {cities_names[tour[0]]}")
+    
+    # Visualize the cities on a map with the tour
+    print("\nVisualizing Moroccan cities with nearest neighbor tour...")
     visualize_cities(
-        cities=cities,
-        city_names=city_names,
-        title="Moroccan Cities for TSP",
+        cities_coordinates=cities_coordinates,
+        cities_names=cities_names,
+        title="Moroccan Cities for TSP with Nearest Neighbor Tour",
         save_to_file=args.save_plot,
-        filename=args.output
+        filename=args.output,
+        route=tour
     )
     
     if args.save_plot:

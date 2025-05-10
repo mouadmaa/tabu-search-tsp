@@ -12,10 +12,11 @@ import numpy as np
 def get_cities():
     """
     Returns a dictionary with major Moroccan cities and their simplified coordinates
-    in a longitude/latitude format.
+    in a longitude/latitude format, along with the number of cities.
     
     Returns:
-        dict: Dictionary mapping city names to (longitude, latitude) coordinate tuples
+        tuple: (dict: Dictionary mapping city names to (longitude, latitude) coordinate tuples,
+               int: Number of cities)
     """
     # Morocco longitude range: approximately -10 to -1
     # Morocco latitude range: approximately 30 to 36
@@ -44,7 +45,7 @@ def get_cities():
         "Ifrane": (-5.1, 33.5),
         "Errachidia": (-4.4, 32.0),
     }
-    return morocco_cities
+    return morocco_cities, len(morocco_cities)
 
 
 def cities_to_array(cities_dict=None):
@@ -60,8 +61,8 @@ def cities_to_array(cities_dict=None):
         tuple: (numpy.ndarray of shape (num_cities, 2), list of city names)
     """
     if cities_dict is None:
-        cities_dict = get_cities()
+        cities_dict, _ = get_cities()
         
-    city_names = list(cities_dict.keys())
-    coordinates = np.array([cities_dict[name] for name in city_names])
-    return coordinates, city_names
+    cities_names = list(cities_dict.keys())
+    coordinates = np.array([cities_dict[name] for name in cities_names])
+    return coordinates, cities_names
