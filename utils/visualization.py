@@ -106,14 +106,25 @@ def visualize_cities(cities_coordinates, cities_names=None, title="Moroccan Citi
             mid_x = x1 + dx * 0.6  # Position arrow at 60% along the line
             mid_y = y1 + dy * 0.6
             
-            # Use consistent styling for all route edges
-            plt.plot([x1, x2], [y1, y2], 'b-', alpha=0.6, zorder=2, linewidth=1.5)
-            
-            # Add a regular arrow for all edges
-            plt.arrow(mid_x, mid_y, dx * 0.05, dy * 0.05,
-                      head_width=0.08, head_length=0.1,
-                      fc='blue', ec='blue', zorder=2, alpha=0.8,
-                      length_includes_head=True)
+            # Check if this is the edge starting from the starting city
+            if start_city_idx is not None and curr_idx == start_city_idx:
+                # Special styling for the line from starting city (green color, thicker)
+                plt.plot([x1, x2], [y1, y2], 'g-', alpha=0.7, zorder=2.2, linewidth=2.0)
+                
+                # Special styling for the arrow from starting city (green)
+                plt.arrow(mid_x, mid_y, dx * 0.05, dy * 0.05,
+                          head_width=0.09, head_length=0.11,
+                          fc='green', ec='darkgreen', zorder=2.5, alpha=0.85,
+                          length_includes_head=True)
+            else:
+                # Regular styling for all other edges
+                plt.plot([x1, x2], [y1, y2], 'b-', alpha=0.6, zorder=2, linewidth=1.5)
+                
+                # Regular styling for other arrows
+                plt.arrow(mid_x, mid_y, dx * 0.05, dy * 0.05,
+                          head_width=0.08, head_length=0.1,
+                          fc='blue', ec='blue', zorder=2, alpha=0.8,
+                          length_includes_head=True)
 
     # Use a descriptive title with a larger font size
     plt.title(title, fontsize=16, fontweight='bold', pad=10)
