@@ -31,7 +31,7 @@ class PerformanceTracker:
     
     def track_iteration(self, iteration, current_length, best_length, move_type=None):
         """
-        Record performance metrics for current iteration.
+        Record performance metrics for the current iteration.
         
         Args:
             iteration: Current iteration number
@@ -88,75 +88,88 @@ class PerformanceTracker:
             print("No performance data available.")
             return None
         
-        # Create figure
-        fig, ax = plt.subplots(figsize=(10, 6))
-        
-        # Plot tour lengths
-        ax.plot(self.iterations, self.best_tour_lengths, 'r-', linewidth=2, 
-                label='Best Tour Length')
-        ax.plot(self.iterations, self.tour_lengths, 'b-', alpha=0.3, 
-                label='Current Tour Length')
-        
+        # Create a figure with main plot and stats side by side
+        fig = plt.figure(figsize=(12, 6))
+
+        # Define grid layout with the main plot and stat box
+        gs = fig.add_gridspec(1, 2, width_ratios=[3, 1])
+
+        # Main plot
+        ax_main = fig.add_subplot(gs[0, 0])
+
+        # Calculate time in milliseconds
+        times_ms = [t * 1000 for t in self.times]  # Convert seconds to milliseconds
+
+        # Plot tour durations in main plot
+        ax_main.plot(self.iterations, self.best_tour_lengths, 'r-', linewidth=2,
+                    label='Best Tour Duration')
+        ax_main.plot(self.iterations, self.tour_lengths, 'b-', alpha=0.3,
+                    label='Current Tour Duration')
+
         # Calculate key metrics
         initial_length = self.tour_lengths[0]
         final_length = self.best_tour_lengths[-1]
         improvement = initial_length - final_length
         improvement_percentage = (improvement / initial_length) * 100
-        
+
         # Add improvement rate info
+        improvements = []
         if len(self.best_tour_lengths) > 10:
             # Calculate improvements
-            improvements = []
             for i in range(1, len(self.best_tour_lengths)):
                 if self.best_tour_lengths[i] < self.best_tour_lengths[i-1]:
                     improvements.append(i)
-            
+
             # Highlight improvement points
             if improvements:
                 imp_iters = [self.iterations[i] for i in improvements]
                 imp_lengths = [self.best_tour_lengths[i] for i in improvements]
-                ax.scatter(imp_iters, imp_lengths, color='green', s=30, alpha=0.7, 
-                           marker='o', label='Improvements')
-        
-        # Create enhanced stats box
+                ax_main.scatter(imp_iters, imp_lengths, color='green', s=30, alpha=0.7,
+                               marker='o', label='Improvements')
+
+        # Create an enhanced stats box
         iterations_per_second = len(self.iterations) / self.times[-1] if self.times[-1] > 0 else 0
         stats = (
-            f"Initial length: {initial_length:.1f}\n"
-            f"Final length: {final_length:.1f}\n"
-            f"Improvement: {improvement:.1f} ({improvement_percentage:.1f}%)\n"
-            f"Total iterations: {len(self.iterations)}\n"
-            f"Runtime: {self.times[-1]:.1f}s ({iterations_per_second:.1f} iter/s)\n"
-            f"2-opt moves: {self.move_counts.get('2opt', 0)}\n"
-            f"Swap moves: {self.move_counts.get('swap', 0)}"
+            f"Initial length    : {initial_length:.1f}\n\n"
+            f"Final length      : {final_length:.1f}\n\n"
+            f"Improvement    : {improvement:.1f} ({improvement_percentage:.1f}%)\n\n"
+            f"Total iterations  : {len(self.iterations)}\n\n"
+            f"Runtime            : {self.times[-1]*1000:.1f}ms ({iterations_per_second:.1f} iter/s)\n\n"
+            f"2-opt moves     : {self.move_counts.get('2opt', 0)}\n\n"
+            f"Swap moves      : {self.move_counts.get('swap', 0)}"
         )
-        
-        # Add stats box to plot
-        bbox_props = dict(boxstyle="round,pad=0.5", fc="white", ec="gray", alpha=0.8)
-        ax.text(0.95, 0.95, stats, transform=ax.transAxes, fontsize=9,
-                verticalalignment='top', horizontalalignment='right', bbox=bbox_props)
-        
-        # Set labels and title
-        ax.set_xlabel('Iterations')
-        ax.set_ylabel('Tour Length')
-        ax.set_title(title or 'Tabu Search Performance')
-        ax.grid(True, linestyle='--', alpha=0.6)
-        ax.legend(loc='upper right')
-        
-        # Add a second x-axis for time
+
+        # Set labels and title for the main plot
+        ax_main.set_xlabel('Iterations')
+        ax_main.set_ylabel('Tour Duration')
+        ax_main.set_title(title or 'Tabu Search Performance', pad=15, fontsize=14)
+        ax_main.grid(True, linestyle='--', alpha=0.6)
+        ax_main.legend(loc='upper right')
+
+        # Add a second x-axis for time in milliseconds
         if len(self.times) > 1:
-            ax2 = ax.twiny()
+            ax2 = ax_main.twiny()
             ax2.set_xlim(0, self.times[-1])
-            ax2.set_xlabel('Time (seconds)')
-            
-            # Set reasonable number of ticks
-            time_ticks = min(5, len(self.times))
+            ax2.set_xlabel('Time (ms)')
+
+            # Set a reasonable number of ticks
+            time_ticks = min(5, len(times_ms))
             ax2.set_xticks(np.linspace(0, self.times[-1], time_ticks))
-            ax2.set_xticklabels([f"{t:.1f}" for t in np.linspace(0, self.times[-1], time_ticks)])
+            ax2.set_xticklabels([f"{t:.1f}" for t in np.linspace(0, times_ms[-1], time_ticks)])
+
+        # Create a stat box on the right
+        ax_stats = fig.add_subplot(gs[0, 1])
+        ax_stats.axis('off')  # Hide axes
         
+        # Add performance stats to the right box
+        ax_stats.text(0.1, 0.65, stats, transform=ax_stats.transAxes, fontsize=11,
+                     verticalalignment='center', horizontalalignment='left')
+        ax_stats.set_title('Performance Statistics', fontsize=12)
+
         # Tight layout
-        plt.tight_layout()
+        plt.tight_layout(pad=1.5)
         
-        # Save if path provided
+        # Save if a path provided
         if save_path:
             os.makedirs(os.path.dirname(save_path) if os.path.dirname(save_path) else '.', exist_ok=True)
             plt.savefig(save_path)

@@ -151,7 +151,7 @@ def main():
         save_to_file=args.save_plot,
         filename=args.output,
         route=optimized_tour,
-        start_city_idx=tour[0]  # Highlight the starting city
+        start_city_idx=tour[0]
     )
     
     if args.save_plot:

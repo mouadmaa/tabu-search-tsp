@@ -144,8 +144,8 @@ def visualize_cities(cities_coordinates, cities_names=None, title="Moroccan Citi
 
     # Add a simple north arrow in the top left corner
     arrow_length = (max_lat - min_lat) * 0.05  # Reduced size
-    compass_x = min_lon + (max_lon - min_lon) * 0.08
-    compass_y = max_lat - (max_lat - min_lat) * 0.15  # Position near top
+    compass_x = min_lon + (max_lon - min_lon) * 0.05  # Position near the left
+    compass_y = max_lat - (max_lat - min_lat) * 0.06  # Position near the top
 
     # Small white background circle
     compass_circle = plt.Circle((compass_x, compass_y), arrow_length * 0.9,
