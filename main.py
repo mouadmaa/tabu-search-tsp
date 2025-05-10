@@ -94,7 +94,7 @@ def main():
     print(f"Tabu tenure: {tabu_tenure}, Max iterations without improvement: {max_no_improvement}")
     
     # Create a performance tracker
-    from utils.performance import PerformanceTracker
+    from utils.performance_tracker import PerformanceTracker
     tracker = PerformanceTracker()
     tracker.start()
     
