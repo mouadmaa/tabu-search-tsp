@@ -5,7 +5,6 @@ This module provides functions to improve tours using tabu search with 2-opt and
 """
 
 import time
-import numpy as np
 from collections import deque
 
 
@@ -143,9 +142,15 @@ class TabuList:
         
         Args:
             tenure (int): Number of iterations a move remains tabu
+                          (can be dynamically adjusted during search)
         """
         self.tenure = tenure
+        self.initial_tenure = tenure  # Store initial value for potential reset
         self.tabu_list = deque()
+    
+    def reset_tenure(self):
+        """Reset tabu tenure to its initial value."""
+        self.tenure = self.initial_tenure
     
     def add_move(self, move, current_iteration):
         """
@@ -226,7 +231,9 @@ class TabuList:
 
 def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iterations=1000, 
                              time_limit=60, use_swap=True, prioritize_2opt=True, 
-                             aspiration_enabled=True, verbose=False):
+                             aspiration_enabled=True, max_no_improvement=None,
+                             intensification_threshold=20, diversification_threshold=50,
+                             dynamic_tabu=False, verbose=False):
     """
     Improve a tour using tabu search with 2-opt moves and optionally city swaps.
     
@@ -239,6 +246,10 @@ def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iteratio
         use_swap (bool): Whether to use city swap operations
         prioritize_2opt (bool): Whether to prioritize 2-opt operations over city swaps
         aspiration_enabled (bool): Whether to enable aspiration criteria (allow tabu moves if they improve the best solution)
+        max_no_improvement (int): Stop after this many iterations without improvement. If None, uses tabu_tenure * 2
+        intensification_threshold (int): Number of iterations without improvement before intensifying search
+        diversification_threshold (int): Number of iterations without improvement before diversifying search
+        dynamic_tabu (bool): Whether to dynamically adjust tabu tenure during search
         verbose (bool): Whether to print progress information
         
     Returns:
@@ -293,7 +304,7 @@ def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iteratio
                     best_neighbor = neighbor
                     best_move_info = move_info
         
-        # If no non-tabu move found with 2-opt and we're using city swaps, or if we don't prioritize 2-opt
+        # If no non-tabu move found with 2-opt, and we're using city swaps, or if we don't prioritize 2-opt
         if (not found_non_tabu_move or not prioritize_2opt) and use_swap:
             for neighbor, move_info in generate_swap_neighbors(current_tour):
                 neighbor_length = calculate_tour_length(neighbor, distance_matrix)
@@ -342,11 +353,33 @@ def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iteratio
             # Option: could implement diversification strategies here (e.g., random perturbation)
             no_improvement_count += 1
         
+        # Determine when to stop due to lack of improvement
+        if max_no_improvement is None:
+            max_no_improvement_threshold = max(50, tabu_tenure * 2)
+        else:
+            max_no_improvement_threshold = max_no_improvement
+        
         # Termination condition: if no improvement for a significant number of iterations
-        if no_improvement_count >= max(50, tabu_tenure * 2):
+        if no_improvement_count >= max_no_improvement_threshold:
             if verbose:
                 print(f"Stopping: No improvement for {no_improvement_count} iterations.")
             break
+        
+        # Handle intensification and diversification based on no improvement count
+        if dynamic_tabu:
+            if no_improvement_count >= diversification_threshold:
+                # Increase tabu tenure temporarily to encourage diversification
+                if verbose and tabu_list.tenure < tabu_tenure * 2:
+                    print(f"Iteration {iteration}: Diversifying search (increasing tabu tenure)")
+                tabu_list.tenure = min(tabu_tenure * 2, tabu_tenure + 10)
+            elif no_improvement_count >= intensification_threshold:
+                # Decrease tabu tenure temporarily to encourage intensification
+                if verbose and tabu_list.tenure > max(3, tabu_tenure // 2):
+                    print(f"Iteration {iteration}: Intensifying search (decreasing tabu tenure)")
+                tabu_list.tenure = max(3, tabu_tenure // 2)
+            else:
+                # Reset to normal tabu tenure
+                tabu_list.tenure = tabu_tenure
     
     elapsed_time = time.time() - start_time
     

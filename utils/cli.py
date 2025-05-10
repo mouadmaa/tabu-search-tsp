@@ -6,63 +6,97 @@ Contains functions for parsing and handling command-line arguments.
 import argparse
 
 
+import argparse
+
+
 def parse_arguments():
     """
-    Parse command-line arguments.
-
+    Parse command-line arguments for the TSP visualization and tabu search optimization.
+    
+    Focuses on key parameters that most significantly affect solution quality:
+    - Iterations and tabu tenure to balance exploration vs. exploitation
+    - Time limits for practical runtime constraints
+    - Visualization options for result display
+    
     Returns:
         argparse.Namespace: Parsed arguments
     """
-    parser = argparse.ArgumentParser(description='Visualize Moroccan cities for the Traveling Salesman Problem')
-
-    parser.add_argument('--save-plot', action='store_true',
-                       help='Save the visualization to a file instead of displaying it')
-    parser.add_argument('--output', type=str, default='morocco_cities.png',
-                       help='Output filename for the visualization (if --save-plot is used)')
-    parser.add_argument('--verbose', action='store_true',
-                       help='Print detailed progress information')
-    parser.add_argument('--start-city', type=int, 
-                       help='Starting city index for the nearest neighbor tour (random if not specified)')
-
-    # Add optimization-related arguments
+    parser = argparse.ArgumentParser(
+        description='Traveling Salesman Problem solver using Tabu Search optimization',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    
+    # Core tabu search parameters
     parser.add_argument(
-        "--max-iterations",
+        "--max-iterations", "-i",
         type=int,
-        default=1000,
-        help="Maximum number of iterations for optimization"
+        default=3000,
+        help="Maximum number of iterations (1000-5000 recommended)"
     )
     
     parser.add_argument(
-        "--time-limit",
+        "--tabu-tenure", "-tt",
+        type=str,
+        default="sqrt",
+        help="Tabu tenure: Either a number, 'sqrt' (√n), or 'log' (log(n) * 3)"
+    )
+    
+    parser.add_argument(
+        "--time-limit", "-t",
         type=int,
         default=60,
         help="Time limit in seconds for optimization"
     )
     
     parser.add_argument(
+        "--max-no-improvement",
+        type=int,
+        default=None,
+        help="Stop after N iterations without improvement"
+    )
+    
+    # Move strategy options
+    parser.add_argument(
         "--no-swap",
         action="store_true",
-        help="Disable city swap operations (use only 2-opt)"
+        help="Use only 2-opt moves (no city swaps)"
     )
     
+    # Visualization options
     parser.add_argument(
-        "--no-prioritize-2opt",
+        "--save-plot",
         action="store_true",
-        help="Don't prioritize 2-opt moves over city swaps"
+        help="Save visualization to file instead of displaying"
     )
     
-    # Add tabu search specific arguments
     parser.add_argument(
-        "--tabu-tenure",
+        "--output", "-o",
+        type=str,
+        default="morocco_cities.png",
+        help="Output filename for visualization"
+    )
+    
+    parser.add_argument(
+        "--start-city",
         type=int,
-        default=10,
-        help="Number of iterations a move remains tabu"
+        help="Starting city index (random if not specified)"
     )
     
+    # Misc options
     parser.add_argument(
-        "--no-aspiration",
+        "--verbose", "-v",
         action="store_true",
-        help="Disable aspiration criteria in tabu search"
+        help="Print detailed progress information"
     )
     
-    return parser.parse_args()
+    args = parser.parse_args()
+    
+    # Process the tabu tenure parameter
+    if args.tabu_tenure.lower() not in ["sqrt", "log"]:
+        try:
+            args.tabu_tenure = int(args.tabu_tenure)
+        except ValueError:
+            print(f"Warning: Invalid tabu tenure '{args.tabu_tenure}'. Using 'sqrt' instead.")
+            args.tabu_tenure = "sqrt"
+    
+    return args

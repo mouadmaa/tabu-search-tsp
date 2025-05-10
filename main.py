@@ -8,6 +8,7 @@ on a map for the Traveling Salesman Problem.
 
 import numpy as np
 import time
+import math
 
 # Import modules from the project structure
 from utils.cli import parse_arguments
@@ -74,15 +75,34 @@ def main():
     print("\nApplying tabu search optimization with 2-opt and city swap...")
     start_time = time.time()
     
+    # Process dynamic tabu tenure based on problem size if specified
+    if isinstance(args.tabu_tenure, str):
+        if args.tabu_tenure.lower() == 'sqrt':
+            tabu_tenure = int(round(math.sqrt(num_cities)))
+            print(f"Using tabu tenure: sqrt({num_cities}) = {tabu_tenure}")
+        elif args.tabu_tenure.lower() == 'log':
+            tabu_tenure = int(round(math.log(num_cities) * 3))
+            print(f"Using tabu tenure: log({num_cities}) * 3 = {tabu_tenure}")
+        else:
+            tabu_tenure = 10  # Default fallback
+    else:
+        tabu_tenure = args.tabu_tenure
+    
+    # Set max_no_improvement if not explicitly provided
+    max_no_improvement = args.max_no_improvement if args.max_no_improvement is not None else tabu_tenure * 2
+    
+    print(f"Tabu tenure: {tabu_tenure}, Max iterations without improvement: {max_no_improvement}")
+    
     optimized_tour, optimized_length, iterations, move_types = tabu_search_optimization(
         tour=tour,
         distance_matrix=distance_matrix,
-        tabu_tenure=args.tabu_tenure,
+        tabu_tenure=tabu_tenure,
         max_iterations=args.max_iterations,
         time_limit=args.time_limit,
         use_swap=not args.no_swap,
-        prioritize_2opt=not args.no_prioritize_2opt,
-        aspiration_enabled=not args.no_aspiration,
+        prioritize_2opt=True,  # Always prioritize 2-opt by default
+        aspiration_enabled=True,  # Always enable aspiration
+        max_no_improvement=max_no_improvement,
         verbose=args.verbose
     )
     
