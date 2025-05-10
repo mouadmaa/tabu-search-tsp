@@ -4,11 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="088a2c5d-3d27-4da5-8dc7-bc876d2b2a53" name="Changes" comment="Enhance visualization for TSP: add special styling for edges from the starting city and maintain consistent styling for other edges">
+    <list default="true" id="088a2c5d-3d27-4da5-8dc7-bc876d2b2a53" name="Changes" comment="Enhance command-line interface for TSP: add optimization parameters, improve argument parsing, and refine visualization options">
+      <change afterPath="$PROJECT_DIR$/utils/performance.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/algorithms/tabu_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms/tabu_search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/tour_initialization.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/tour.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/cli.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/visualization.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,12 +28,12 @@
     &quot;assignee&quot;: &quot;mouadmaa&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/mouadmaa/tabu-search-tsp.git",
-    "accountId": "a71927d2-0eff-442a-803e-0c71aa3daf5d"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/mouadmaa/tabu-search-tsp.git&quot;,
+    &quot;accountId&quot;: &quot;a71927d2-0eff-442a-803e-0c71aa3daf5d&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -70,7 +74,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="" />
+      <option name="PARAMETERS" value="--show-performance" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />

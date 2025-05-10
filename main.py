@@ -14,7 +14,7 @@ import math
 from utils.cli import parse_arguments
 from data.cities import get_cities, cities_to_array
 from core.distance import compute_distance_matrix
-from core.tour_initialization import nearest_neighbor_tour
+from core.tour import nearest_neighbor_tour
 from algorithms.tabu_search import tabu_search_optimization, calculate_tour_length
 from utils.visualization import visualize_cities
 
@@ -93,6 +93,17 @@ def main():
     
     print(f"Tabu tenure: {tabu_tenure}, Max iterations without improvement: {max_no_improvement}")
     
+    # Create a performance tracker
+    from utils.performance import PerformanceTracker
+    tracker = PerformanceTracker()
+    tracker.start()
+    
+    # Create a callback for performance tracking
+    def track_progress(iteration, current_tour, current_length, best_tour, best_length, move_info):
+        move_type = move_info[0] if move_info else None
+        tracker.track_iteration(iteration, current_length, best_length, move_type)
+    
+    # Run optimization with performance tracking
     optimized_tour, optimized_length, iterations, move_types = tabu_search_optimization(
         tour=tour,
         distance_matrix=distance_matrix,
@@ -103,7 +114,8 @@ def main():
         prioritize_2opt=True,  # Always prioritize 2-opt by default
         aspiration_enabled=True,  # Always enable aspiration
         max_no_improvement=max_no_improvement,
-        verbose=args.verbose
+        verbose=args.verbose,
+        progress_callback=track_progress  # Add a progress callback for tracking
     )
     
     optimization_time = time.time() - start_time
@@ -116,6 +128,18 @@ def main():
     print(f"Initial tour length: {initial_length:.2f}")
     print(f"Optimized tour length: {optimized_length:.2f}")
     print(f"Improvement: {improvement:.2f} ({improvement_percentage:.2f}%)")
+    
+    # Display performance summary and visualization if requested
+    print(f"\n{tracker.get_summary()}")
+    
+    if args.show_performance or args.save_performance:
+        import matplotlib.pyplot as plt
+        title = "Tabu Search Performance for Morocco Cities"
+        tracker.show_report(title=title, save_path=args.save_performance)
+        
+        if args.show_performance:
+            plt.show()
+
     
     # Visualize the cities on a map with the optimized tour
     visualization_title = "Moroccan Cities for TSP with Tabu Search Optimized Tour"

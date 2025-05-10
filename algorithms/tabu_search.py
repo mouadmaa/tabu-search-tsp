@@ -233,7 +233,7 @@ def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iteratio
                              time_limit=60, use_swap=True, prioritize_2opt=True, 
                              aspiration_enabled=True, max_no_improvement=None,
                              intensification_threshold=20, diversification_threshold=50,
-                             dynamic_tabu=False, verbose=False):
+                             dynamic_tabu=False, verbose=False, progress_callback=None):
     """
     Improve a tour using tabu search with 2-opt moves and optionally city swaps.
     
@@ -251,6 +251,9 @@ def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iteratio
         diversification_threshold (int): Number of iterations without improvement before diversifying search
         dynamic_tabu (bool): Whether to dynamically adjust tabu tenure during search
         verbose (bool): Whether to print progress information
+        progress_callback (callable, optional): Function to call after each iteration with progress information
+                                               Signature: callback(iteration, current_tour, current_length, 
+                                                                  best_tour, best_length, move_info)
         
     Returns:
         tuple: (best_tour, best_tour_length, iterations, best_move_types)
@@ -345,6 +348,10 @@ def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iteratio
                           f"elapsed time: {elapsed_time:.2f}s")
             else:
                 no_improvement_count += 1
+                
+            # Call progress callback if provided
+            if progress_callback:
+                progress_callback(iteration, current_tour, current_length, best_tour, best_length, best_move_info)
         else:
             # If no valid move was found, we might be trapped in a local optimum
             if verbose:

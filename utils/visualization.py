@@ -7,6 +7,8 @@ This module provides functions to visualize cities on a map.
 import matplotlib.pyplot as plt
 import numpy as np
 
+from core.tour import calculate_tour_length
+
 
 def visualize_cities(cities_coordinates, cities_names=None, title="Moroccan Cities", 
                     save_to_file=False, filename="morocco_cities.png", route=None,
@@ -195,28 +197,3 @@ def visualize_cities(cities_coordinates, cities_names=None, title="Moroccan Citi
             plt.savefig(filename)
             plt.close()
             print(f"City plot saved to {filename}")
-
-
-def calculate_tour_length(cities_coordinates, tour):
-    """
-    Calculate the total length of a tour.
-    
-    Args:
-        cities_coordinates (numpy.ndarray): Array of shape (num_cities, 2) with city coordinates
-        tour (list): List of city indices representing a TSP route
-        
-    Returns:
-        float: Total length of the tour
-    """
-    total_length = 0.0
-    
-    # Calculate the distance between consecutive cities in the tour
-    for i in range(len(tour)):
-        from_city = tour[i]
-        to_city = tour[(i + 1) % len(tour)]  # Wrap around to the first city
-        
-        # Calculate Euclidean distance
-        distance = np.sqrt(np.sum((cities_coordinates[from_city] - cities_coordinates[to_city]) ** 2))
-        total_length += distance
-        
-    return total_length

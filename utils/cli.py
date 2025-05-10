@@ -76,6 +76,21 @@ def parse_arguments():
         help="Output filename for visualization"
     )
     
+    # Performance visualization options
+    parser.add_argument(
+        "--show-performance",
+        action="store_true",
+        default=False,
+        help="Display a simple performance report figure after optimization"
+    )
+    
+    parser.add_argument(
+        "--save-performance",
+        type=str,
+        metavar="FILENAME",
+        help="Save the performance report to a file"
+    )
+    
     parser.add_argument(
         "--start-city",
         type=int,
