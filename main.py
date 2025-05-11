@@ -55,17 +55,113 @@ def main():
     # Generate initial tour using nearest neighbor heuristic
     print("\nGenerating nearest neighbor tour...")
     
-    # Use a specified start city if provided, otherwise random
-    start_city = args.start_city
-    if start_city is not None:
-        if start_city < 0 or start_city >= num_cities:
-            print(f"Warning: Start city index {start_city} is out of range (0-{num_cities-1}). Using random start city.")
-            start_city = None
+    # Initialize selected_cities as None (will include all cities by default)
+    selected_cities = None
+    
+    # Handle tour selection if enabled
+    if args.tour_selection:
+        # Prompt user to choose a starting city
+        print("\nInteractive Tour Selection Mode")
+        print("------------------------------")
+        print("Available cities:")
+        for i, name in enumerate(cities_names):
+            print(f"  {i+1}: {name}")
+        
+        # Get starting city with validation
+        valid_start_city = False
+        while not valid_start_city:
+            try:
+                start_city_input = input("\nEnter the index (1-22) of your starting city: ")
+                start_idx = int(start_city_input) - 1  # Convert to 0-based index
+                
+                if 0 <= start_idx < num_cities:
+                    start_city = start_idx
+                    valid_start_city = True
+                    print(f"Selected {cities_names[start_city]} as the starting city.")
+                else:
+                    print(f"Error: Please enter a valid index between 1 and {num_cities}.")
+            except ValueError:
+                print("Error: Please enter a valid integer.")
+        
+        # Let user select additional cities to visit
+        print("\nNow select additional cities for your tour (at least 2 cities).")
+        print("Enter 'q' when you're done selecting cities.")
+        
+        selected_cities = []
+        while True:
+            try:
+                city_input = input(f"Enter city index (1-{num_cities}, excluding {start_city+1}) or 'q' to finish: ")
+                
+                if city_input.lower() == 'q':
+                    # Check if we have at least 2 selected cities
+                    if len(selected_cities) >= 2:
+                        break
+                    else:
+                        print("Error: You must select at least 2 additional cities.")
+                        continue
+                
+                city_idx = int(city_input) - 1  # Convert to 0-based index
+                
+                # Validate the selection
+                if city_idx == start_city:
+                    print(f"Error: You've already selected {cities_names[start_city]} as your starting city.")
+                elif 0 <= city_idx < num_cities:
+                    if city_idx in selected_cities:
+                        print(f"Error: You've already selected {cities_names[city_idx]}.")
+                    else:
+                        selected_cities.append(city_idx)
+                        print(f"Added {cities_names[city_idx]} to your tour. "
+                              f"({len(selected_cities)} cities selected so far)")
+                else:
+                    print(f"Error: Please enter a valid index between 1 and {num_cities}.")
+            except ValueError:
+                if city_input.lower() == 'q':
+                    if len(selected_cities) >= 2:
+                        break
+                    else:
+                        print("Error: You must select at least 2 additional cities.")
+                else:
+                    print("Error: Please enter a valid integer or 'q'.")
+        
+        print(f"\nTour will include the starting city {cities_names[start_city]} and {len(selected_cities)} additional cities:")
+        for idx in selected_cities:
+            print(f"  - {cities_names[idx]}")
+    else:
+        # Use a specified start city if provided, otherwise random
+        start_city = args.start_city
+        if start_city is not None:
+            if start_city < 0 or start_city >= num_cities:
+                print(f"Warning: Start city index {start_city} is out of range (0-{num_cities-1}). Using random start city.")
+                start_city = None
+            else:
+                print(f"Using city {start_city} ({cities_names[start_city]}) as starting point.")
         else:
-            print(f"Using city {start_city} ({cities_names[start_city]}) as starting point.")
+            # Select a random starting city
+            start_city = np.random.randint(0, num_cities)
+            print(f"Randomly selected {cities_names[start_city]} as the starting city.")
+        
+        # In automatic mode (default), randomly select a subset of cities to visit
+        # First create a list of all cities except the starting city
+        all_cities_except_start = list(range(num_cities))
+        all_cities_except_start.remove(start_city)
+        
+        # Randomly decide how many cities to visit (between 2 and num_cities-1)
+        # The -1 is because we already have the starting city
+        num_cities_to_select = np.random.randint(2, num_cities)
+        
+        # Randomly select the cities
+        selected_cities = np.random.choice(
+            all_cities_except_start, 
+            size=min(num_cities_to_select, len(all_cities_except_start)), 
+            replace=False
+        ).tolist()
+        
+        print(f"\nRandomly selected {len(selected_cities)} cities to visit (excluding starting city):")
+        for idx in selected_cities:
+            print(f"  - {cities_names[idx]}")
     
     # Generate a tour using the nearest neighbor heuristic
-    tour = nearest_neighbor_tour(distance_matrix, start_city)
+    tour = nearest_neighbor_tour(distance_matrix, start_city, selected_cities)
     initial_length = calculate_tour_length(tour, distance_matrix)
     print(f"Nearest Neighbor Tour: {tour}")
     print(f"Starting City: {cities_names[tour[0]]}")
@@ -142,7 +238,8 @@ def main():
 
     
     # Visualize the cities on a map with the optimized tour
-    visualization_title = "Moroccan Cities for TSP with Tabu Search Optimized Tour"
+    tour_mode = "User-Selected" if args.tour_selection else f"Random ({len(tour)} cities)"
+    visualization_title = f"Moroccan Cities for TSP with Tabu Search Optimized Tour ({tour_mode})"
     print(f"\nVisualizing Moroccan cities with optimized tour...")
     visualize_cities(
         cities_coordinates=cities_coordinates,

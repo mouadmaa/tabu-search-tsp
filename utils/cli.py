@@ -97,6 +97,13 @@ def parse_arguments():
         help="Starting city index (random if not specified)"
     )
     
+    parser.add_argument(
+        "--tour-selection",
+        action="store_true",
+        default=False,
+        help="When True, prompts for city selection. When False (default), randomly selects cities."
+    )
+    
     # Misc options
     parser.add_argument(
         "--verbose", "-v",

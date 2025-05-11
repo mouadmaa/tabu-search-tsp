@@ -7,13 +7,15 @@ This module provides functions to generate initial tours using the nearest neigh
 import numpy as np
 
 
-def nearest_neighbor_tour(distance_matrix, start_city=None):
+def nearest_neighbor_tour(distance_matrix, start_city=None, selected_cities=None):
     """
     Generate a tour using the nearest neighbor heuristic.
     
     Args:
         distance_matrix (numpy.ndarray): Matrix of distances between cities
         start_city (int, optional): Index of the starting city. If None, a random city is chosen.
+        selected_cities (list, optional): List of city indices to include in the tour.
+                                         If None, all cities are included.
         
     Returns:
         list: A tour generated using the nearest neighbor heuristic
@@ -26,8 +28,17 @@ def nearest_neighbor_tour(distance_matrix, start_city=None):
     
     # Initialize the tour with the starting city
     tour = [start_city]
-    unvisited = set(range(num_cities))
-    unvisited.remove(start_city)
+    
+    # Determine which cities to visit
+    if selected_cities is None:
+        # Visit all cities
+        unvisited = set(range(num_cities))
+        unvisited.remove(start_city)
+    else:
+        # Visit only selected cities (excluding the starting city)
+        unvisited = set(selected_cities)
+        if start_city in unvisited:
+            unvisited.remove(start_city)
     
     # Build the tour by always selecting the closest unvisited city
     current_city = start_city
