@@ -22,16 +22,21 @@ def create_performance_tracker():
     return tracker
 
 
-def create_progress_callback(tracker):
+def create_progress_callback(tracker, initial_tour_length=None):
     """
     Create a callback function for tracking optimization progress.
     
     Args:
         tracker (PerformanceTracker): The performance tracker to use
+        initial_tour_length (float, optional): The initial tour length before optimization
         
     Returns:
         function: A callback function that updates the tracker
     """
+    # Store the initial tour length in the tracker if provided
+    if initial_tour_length is not None:
+        tracker.set_initial_tour_length(initial_tour_length)
+    
     def track_progress(iteration, current_tour, current_length, best_tour, best_length, move_info):
         move_type = move_info[0] if move_info else None
         tracker.track_iteration(iteration, current_length, best_length, move_type)
@@ -57,16 +62,16 @@ def display_performance_results(tracker, initial_length, optimized_length, itera
     improvement = initial_length - optimized_length
     improvement_percentage = (improvement / initial_length) * 100
     
-    # Print optimization results
-    print(f"\nTabu search optimization completed in {optimization_time:.2f} seconds.")
-    print(f"Iterations performed: {iterations}")
-    print(f"Move types used for improvements: 2-opt: {move_types['2opt']}, swap: {move_types['swap']}")
+    # Create a simpler performance summary
+    print("\nTabu Search Performance Summary:")
     print(f"Initial tour length: {initial_length:.2f}")
     print(f"Optimized tour length: {optimized_length:.2f}")
     print(f"Improvement: {improvement:.2f} ({improvement_percentage:.2f}%)")
-    
-    # Display performance summary
-    print(f"\n{tracker.get_summary()}")
+    print(f"Iterations: {iterations}")
+    print(f"Time: {optimization_time:.2f} seconds")
+    if iterations > 0:
+        print(f"Speed: {iterations/optimization_time:.2f} iterations/second")
+    print(f"2-opt moves: {tracker.move_counts.get('2opt', 0)}")
     
     # Generate and display performance visualization if requested
     if args.show_performance or args.save_performance:

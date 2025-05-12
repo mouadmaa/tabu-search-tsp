@@ -22,12 +22,17 @@ class PerformanceTracker:
         self.best_tour_lengths = []
         self.times = []
         self.start_time = None
-        self.move_counts = {'2opt': 0, 'swap': 0}
+        self.move_counts = {'2opt': 0}
         self.move_types = []
+        self.initial_tour_length = None
     
     def start(self):
         """Start tracking performance."""
         self.start_time = time.time()
+    
+    def set_initial_tour_length(self, initial_length):
+        """Set the initial tour length before optimization."""
+        self.initial_tour_length = initial_length
     
     def track_iteration(self, iteration, current_length, best_length, move_type=None):
         """
@@ -57,7 +62,8 @@ class PerformanceTracker:
         if not self.iterations:
             return "No performance data available."
         
-        initial_length = self.tour_lengths[0]
+        # Use stored initial tour length if available, otherwise use first recorded length
+        initial_length = self.initial_tour_length if self.initial_tour_length is not None else self.tour_lengths[0]
         final_length = self.best_tour_lengths[-1]
         improvement = initial_length - final_length
         improvement_percentage = (improvement / initial_length) * 100
@@ -69,8 +75,7 @@ class PerformanceTracker:
             f"Improvement: {improvement:.2f} ({improvement_percentage:.2f}%)\n"
             f"Iterations: {len(self.iterations)}\n"
             f"Time: {self.times[-1]:.2f}s\n"
-            f"2-opt moves: {self.move_counts.get('2opt', 0)}\n"
-            f"Swap moves: {self.move_counts.get('swap', 0)}"
+            f"2-opt moves: {self.move_counts.get('2opt', 0)}"
         )
     
     def show_report(self, title=None, save_path=None):
@@ -107,7 +112,7 @@ class PerformanceTracker:
                     label='Current Tour Duration')
 
         # Calculate key metrics
-        initial_length = self.tour_lengths[0]
+        initial_length = self.initial_tour_length if self.initial_tour_length is not None else self.tour_lengths[0]
         final_length = self.best_tour_lengths[-1]
         improvement = initial_length - final_length
         improvement_percentage = (improvement / initial_length) * 100
@@ -135,8 +140,7 @@ class PerformanceTracker:
             f"Improvement    : {improvement:.1f} ({improvement_percentage:.1f}%)\n\n"
             f"Total iterations  : {len(self.iterations)}\n\n"
             f"Runtime            : {self.times[-1]*1000:.1f}ms ({iterations_per_second:.1f} iter/s)\n\n"
-            f"2-opt moves     : {self.move_counts.get('2opt', 0)}\n\n"
-            f"Swap moves      : {self.move_counts.get('swap', 0)}"
+            f"2-opt moves     : {self.move_counts.get('2opt', 0)}"
         )
 
         # Set labels and title for the main plot

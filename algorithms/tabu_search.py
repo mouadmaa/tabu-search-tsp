@@ -1,7 +1,7 @@
 """
 Module containing tabu search algorithm for the Traveling Salesman Problem.
 
-This module provides functions to improve tours using tabu search with 2-opt and city swap moves.
+This module provides functions to improve tours using tabu search with 2-opt moves.
 """
 
 import time
@@ -54,27 +54,6 @@ def apply_2opt_move(tour, i, j):
     return new_tour
 
 
-def apply_city_swap(tour, i, j):
-    """
-    Apply a city swap move by exchanging the positions of two cities in the tour.
-    
-    Args:
-        tour (list): The current tour
-        i (int): Position of the first city
-        j (int): Position of the second city
-        
-    Returns:
-        list: A new tour after swapping the cities
-    """
-    # Create a new tour to avoid modifying the original
-    new_tour = tour.copy()
-    
-    # Swap the cities at positions i and j
-    new_tour[i], new_tour[j] = new_tour[j], new_tour[i]
-    
-    return new_tour
-
-
 def generate_2opt_neighbors(tour):
     """
     Generate all possible 2-opt neighbors for a given tour.
@@ -104,29 +83,6 @@ def generate_2opt_neighbors(tour):
     return neighbors
 
 
-def generate_swap_neighbors(tour):
-    """
-    Generate all possible city swap neighbors for a given tour.
-    
-    Args:
-        tour (list): The current tour
-        
-    Returns:
-        list: A list of all possible city swap neighbor tours
-    """
-    n = len(tour)
-    neighbors = []
-    
-    # Loop through all possible pairs of cities
-    for i in range(n):
-        for j in range(i + 1, n):
-            # Apply the city swap and add the resulting tour to the neighbors list
-            neighbor = apply_city_swap(tour, i, j)
-            neighbors.append((neighbor, ('swap', i, j)))
-            
-    return neighbors
-
-
 class TabuList:
     """
     A data structure to maintain a list of tabu moves.
@@ -144,13 +100,14 @@ class TabuList:
             tenure (int): Number of iterations a move remains tabu
                           (can be dynamically adjusted during search)
         """
-        self.tenure = tenure
-        self.initial_tenure = tenure  # Store initial value for potential reset
+        # Ensure tenure is an integer
+        self.tenure = int(tenure)
+        self.initial_tenure = int(tenure)  # Store initial value for potential reset
         self.tabu_list = deque()
     
     def reset_tenure(self):
         """Reset tabu tenure to its initial value."""
-        self.tenure = self.initial_tenure
+        self.tenure = int(self.initial_tenure)
     
     def add_move(self, move, current_iteration):
         """
@@ -200,15 +157,9 @@ class TabuList:
         move_type1, i1, j1 = move1
         move_type2, i2, j2 = move2
         
-        # Moves match if they have the same type and involve the same indices
+        # Moves match if they involve the same indices
         # For 2-opt, we compare both ways since (i,j) and (j,i) represent the same move
-        if move_type1 == move_type2:
-            if move_type1 == '2opt':
-                return (i1 == i2 and j1 == j2) or (i1 == j2 and j1 == i2)
-            else:  # 'swap'
-                return (i1 == i2 and j1 == j2) or (i1 == j2 and j1 == i2)
-        
-        return False
+        return (i1 == i2 and j1 == j2) or (i1 == j2 and j1 == i2)
     
     def _clean_expired(self, current_iteration):
         """
@@ -229,28 +180,65 @@ class TabuList:
         return len(self.tabu_list)
 
 
-def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iterations=1000, 
-                             time_limit=60, use_swap=True, prioritize_2opt=True, 
-                             aspiration_enabled=True, max_no_improvement=None,
-                             intensification_threshold=20, diversification_threshold=50,
-                             dynamic_tabu=False, verbose=False, progress_callback=None):
+def process_tabu_tenure(tabu_tenure_input, num_cities):
     """
-    Improve a tour using tabu search with 2-opt moves and optionally city swaps.
+    Process the tabu tenure parameter value based on input type and problem size.
+    
+    Args:
+        tabu_tenure_input (str or int): The tabu tenure parameter value
+        num_cities (int): The number of cities in the problem
+        
+    Returns:
+        tuple: (int: processed tabu tenure value, str: description of the calculation)
+    """
+    import math
+    
+    if isinstance(tabu_tenure_input, str):
+        if tabu_tenure_input.lower() == 'sqrt':
+            tenure = int(round(math.sqrt(num_cities)))
+            description = f"sqrt({num_cities}) = {tenure}"
+        elif tabu_tenure_input.lower() == 'log':
+            tenure = int(round(math.log(num_cities) * 3))
+            description = f"log({num_cities}) * 3 = {tenure}"
+        else:
+            # Default fallback
+            tenure = 10
+            description = "default value = 10"
+    else:
+        # Use the provided integer value and ensure it's an integer
+        try:
+            tenure = int(tabu_tenure_input)
+        except (ValueError, TypeError):
+            # Fallback to default if conversion fails
+            tenure = 10
+            description = "default value = 10 (invalid input)"
+        else:
+            description = str(tenure)
+    
+    # Ensure a minimum tenure of 1
+    tenure = max(1, tenure)
+    
+    return tenure, description
+
+
+def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iterations=1000, 
+                             time_limit=60, aspiration_enabled=True, max_no_improvement=None,
+                             intensification_threshold=20, diversification_threshold=50,
+                             dynamic_tabu=False, progress_callback=None):
+    """
+    Improve a tour using tabu search with 2-opt moves.
     
     Args:
         tour (list): Initial tour to improve
         distance_matrix (numpy.ndarray): Matrix of distances between cities
-        tabu_tenure (int): Number of iterations a move remains tabu
+        tabu_tenure (int or str): Number of iterations a move remains tabu, or a strategy like 'sqrt' or 'log'
         max_iterations (int): Maximum number of iterations
         time_limit (int): Maximum running time in seconds
-        use_swap (bool): Whether to use city swap operations
-        prioritize_2opt (bool): Whether to prioritize 2-opt operations over city swaps
         aspiration_enabled (bool): Whether to enable aspiration criteria (allow tabu moves if they improve the best solution)
         max_no_improvement (int): Stop after this many iterations without improvement. If None, uses tabu_tenure * 2
         intensification_threshold (int): Number of iterations without improvement before intensifying search
         diversification_threshold (int): Number of iterations without improvement before diversifying search
         dynamic_tabu (bool): Whether to dynamically adjust tabu tenure during search
-        verbose (bool): Whether to print progress information
         progress_callback (callable, optional): Function to call after each iteration with progress information
                                                Signature: callback(iteration, current_tour, current_length, 
                                                                   best_tour, best_length, move_info)
@@ -259,9 +247,19 @@ def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iteratio
         tuple: (best_tour, best_tour_length, iterations, best_move_types)
     """
     start_time = time.time()
+    num_cities = len(tour)
     
-    # Initialize tabu list
-    tabu_list = TabuList(tenure=tabu_tenure)
+    # Process tabu tenure value - convert string strategies to actual integers
+    tabu_tenure_value, description = process_tabu_tenure(tabu_tenure, num_cities)
+    print(f"Using tabu tenure: {description}")
+    
+    # Initialize tabu list with the processed integer tenure
+    tabu_list = TabuList(tenure=tabu_tenure_value)
+    
+    # Set max_no_improvement if not explicitly provided
+    if max_no_improvement is None:
+        max_no_improvement = tabu_tenure_value * 2
+        print(f"Setting max iterations without improvement to: {max_no_improvement}")
     
     # Initialize current and best solutions
     current_tour = tour.copy()
@@ -272,12 +270,10 @@ def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iteratio
     
     iteration = 0
     improvements = 0
-    best_move_types = {'2opt': 0, 'swap': 0}
+    best_move_types = {'2opt': 0}
     no_improvement_count = 0
     
-    if verbose:
-        print(f"Initial tour length: {current_length:.2f}")
-        print(f"Tabu tenure: {tabu_tenure} iterations")
+    # No initial verbose output
     
     # Continue until we reach the maximum number of iterations or time limit
     while iteration < max_iterations and (time.time() - start_time) < time_limit:
@@ -288,9 +284,6 @@ def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iteratio
         best_neighbor_length = float('inf')
         best_move_info = None
         
-        # Flag to track if we found a non-tabu move
-        found_non_tabu_move = False
-        
         # Generate and evaluate all possible 2-opt neighbors
         for neighbor, move_info in generate_2opt_neighbors(current_tour):
             neighbor_length = calculate_tour_length(neighbor, distance_matrix)
@@ -300,29 +293,10 @@ def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iteratio
             
             # Apply aspiration criteria if enabled: allow tabu moves if they improve the best solution
             if not is_tabu or (aspiration_enabled and neighbor_length < best_length):
-                found_non_tabu_move = True
-                
                 if neighbor_length < best_neighbor_length:
                     best_neighbor_length = neighbor_length
                     best_neighbor = neighbor
                     best_move_info = move_info
-        
-        # If no non-tabu move found with 2-opt, and we're using city swaps, or if we don't prioritize 2-opt
-        if (not found_non_tabu_move or not prioritize_2opt) and use_swap:
-            for neighbor, move_info in generate_swap_neighbors(current_tour):
-                neighbor_length = calculate_tour_length(neighbor, distance_matrix)
-                
-                # Check if the move is tabu
-                is_tabu = tabu_list.is_tabu(move_info, iteration)
-                
-                # Apply aspiration criteria if enabled
-                if not is_tabu or (aspiration_enabled and neighbor_length < best_length):
-                    found_non_tabu_move = True
-                    
-                    if neighbor_length < best_neighbor_length:
-                        best_neighbor_length = neighbor_length
-                        best_neighbor = neighbor
-                        best_move_info = move_info
         
         # If a valid move was found, update the current solution and add the move to the tabu list
         if best_neighbor is not None:
@@ -336,16 +310,11 @@ def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iteratio
             if current_length < best_length:
                 best_tour = current_tour.copy()
                 best_length = current_length
-                best_move_types[best_move_info[0]] += 1
+                best_move_types['2opt'] += 1
                 improvements += 1
                 no_improvement_count = 0
                 
-                if verbose and (improvements % 10 == 0 or improvements == 1):
-                    elapsed_time = time.time() - start_time
-                    print(f"Iteration {iteration}: Best tour length = {best_length:.2f} "
-                          f"(move type: {best_move_info[0]}), "
-                          f"tabu list size: {len(tabu_list)}, "
-                          f"elapsed time: {elapsed_time:.2f}s")
+                # No verbose output for improvements
             else:
                 no_improvement_count += 1
                 
@@ -354,46 +323,24 @@ def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iteratio
                 progress_callback(iteration, current_tour, current_length, best_tour, best_length, best_move_info)
         else:
             # If no valid move was found, we might be trapped in a local optimum
-            if verbose:
-                print(f"Iteration {iteration}: No valid move found, may be trapped in local optimum.")
             
             # Option: could implement diversification strategies here (e.g., random perturbation)
             no_improvement_count += 1
         
-        # Determine when to stop due to lack of improvement
-        if max_no_improvement is None:
-            max_no_improvement_threshold = max(50, tabu_tenure * 2)
-        else:
-            max_no_improvement_threshold = max_no_improvement
-        
         # Termination condition: if no improvement for a significant number of iterations
-        if no_improvement_count >= max_no_improvement_threshold:
-            if verbose:
-                print(f"Stopping: No improvement for {no_improvement_count} iterations.")
+        if max_no_improvement is not None and no_improvement_count >= max_no_improvement:
             break
         
         # Handle intensification and diversification based on no improvement count
         if dynamic_tabu:
             if no_improvement_count >= diversification_threshold:
                 # Increase tabu tenure temporarily to encourage diversification
-                if verbose and tabu_list.tenure < tabu_tenure * 2:
-                    print(f"Iteration {iteration}: Diversifying search (increasing tabu tenure)")
-                tabu_list.tenure = min(tabu_tenure * 2, tabu_tenure + 10)
+                tabu_list.tenure = min(tabu_tenure_value * 2, tabu_tenure_value + 10)
             elif no_improvement_count >= intensification_threshold:
                 # Decrease tabu tenure temporarily to encourage intensification
-                if verbose and tabu_list.tenure > max(3, tabu_tenure // 2):
-                    print(f"Iteration {iteration}: Intensifying search (decreasing tabu tenure)")
-                tabu_list.tenure = max(3, tabu_tenure // 2)
+                tabu_list.tenure = max(3, tabu_tenure_value // 2)
             else:
                 # Reset to normal tabu tenure
-                tabu_list.tenure = tabu_tenure
-    
-    elapsed_time = time.time() - start_time
-    
-    if verbose:
-        print(f"\nTabu search completed in {elapsed_time:.2f} seconds.")
-        print(f"Iterations: {iteration}, Improvements: {improvements}")
-        print(f"Move types used for improvements: 2-opt: {best_move_types['2opt']}, swap: {best_move_types['swap']}")
-        print(f"Final best tour length: {best_length:.2f}")
+                tabu_list.tenure = tabu_tenure_value
     
     return best_tour, best_length, iteration, best_move_types

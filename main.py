@@ -8,16 +8,15 @@ on a map for the Traveling Salesman Problem.
 
 import numpy as np
 import time
-import math
 
 # Import modules from the project structure
 from utils.cli import parse_arguments
 from data.cities import get_cities, cities_to_array
 from core.distance import compute_distance_matrix
 from core.tour import nearest_neighbor_tour
-from algorithms.tabu_search import tabu_search_optimization, calculate_tour_length
+from algorithms.tabu_search import tabu_search_optimization, calculate_tour_length, process_tabu_tenure
 from utils.visualization import visualize_cities
-from utils.tour_selection import select_cities_interactively, select_cities_randomly
+from utils.tour_selection import select_cities_interactively, select_cities_randomly, display_tour_cities
 from utils.performance_manager import create_performance_tracker, create_progress_callback, display_performance_results
 
 
@@ -39,19 +38,12 @@ def main():
     cities_dict, num_cities = get_cities()
     cities_coordinates, cities_names = cities_to_array(cities_dict)
 
-    print(f"Loaded {num_cities} Moroccan cities for TSP:")
-    for i, name in enumerate(cities_names):
-        print(f"  {i}: {name} at (longitude, latitude): ({cities_coordinates[i, 0]:.2f}, {cities_coordinates[i, 1]:.2f})")
-    
+    print(f"Loaded {num_cities} Moroccan cities for TSP.")
+
     # Compute distance matrix
     print("\nComputing distance matrix...")
     distance_matrix = compute_distance_matrix(cities_coordinates)
     print("Distance matrix computed.")
-    
-    if args.verbose:
-        print("\nDistance Matrix (first 5x5 entries):")
-        np.set_printoptions(precision=2, suppress=True)
-        print(distance_matrix[:5, :5])
     
     # Generate initial tour using nearest neighbor heuristic
     print("\nGenerating nearest neighbor tour...")
@@ -62,58 +54,37 @@ def main():
         start_city, selected_cities = select_cities_interactively(cities_names, num_cities)
     else:
         # Random selection mode
-        start_city, selected_cities = select_cities_randomly(cities_names, num_cities, args.start_city)
+        start_city, selected_cities = select_cities_randomly(cities_names, num_cities)
     
     # Generate a tour using the nearest neighbor heuristic
     tour = nearest_neighbor_tour(distance_matrix, start_city, selected_cities)
     initial_length = calculate_tour_length(tour, distance_matrix)
-    print(f"Nearest Neighbor Tour: {tour}")
-    print(f"Starting City: {cities_names[tour[0]]}")
-    print(f"Initial Tour Length: {initial_length:.2f}")
+    
+    # Display selected cities using the tour_selection module
+    display_tour_cities(tour, cities_names, is_interactive=args.tour_selection, initial_length=initial_length)
     
     # Apply tabu search optimization
-    print("\nApplying tabu search optimization with 2-opt and city swap...")
+    print("\nApplying tabu search optimization...")
     start_time = time.time()
-    
-    # Process dynamic tabu tenure based on problem size if specified
-    if isinstance(args.tabu_tenure, str):
-        if args.tabu_tenure.lower() == 'sqrt':
-            tabu_tenure = int(round(math.sqrt(num_cities)))
-            print(f"Using tabu tenure: sqrt({num_cities}) = {tabu_tenure}")
-        elif args.tabu_tenure.lower() == 'log':
-            tabu_tenure = int(round(math.log(num_cities) * 3))
-            print(f"Using tabu tenure: log({num_cities}) * 3 = {tabu_tenure}")
-        else:
-            tabu_tenure = 10  # Default fallback
-    else:
-        tabu_tenure = args.tabu_tenure
-    
-    # Set max_no_improvement if not explicitly provided
-    max_no_improvement = args.max_no_improvement if args.max_no_improvement is not None else tabu_tenure * 2
-    
-    print(f"Tabu tenure: {tabu_tenure}, Max iterations without improvement: {max_no_improvement}")
     
     # Set up performance tracking
     tracker = create_performance_tracker()
-    progress_callback = create_progress_callback(tracker)
+    progress_callback = create_progress_callback(tracker, initial_tour_length=initial_length)
     
     # Run optimization with performance tracking
     optimized_tour, optimized_length, iterations, move_types = tabu_search_optimization(
         tour=tour,
         distance_matrix=distance_matrix,
-        tabu_tenure=tabu_tenure,
+        tabu_tenure=args.tabu_tenure,
         max_iterations=args.max_iterations,
         time_limit=args.time_limit,
-        use_swap=not args.no_swap,
-        prioritize_2opt=True,  # Always prioritize 2-opt by default
-        aspiration_enabled=True,  # Always enable aspiration
-        max_no_improvement=max_no_improvement,
-        verbose=args.verbose,
+        max_no_improvement=args.max_no_improvement,
         progress_callback=progress_callback
     )
     
     # Calculate optimization time
     optimization_time = time.time() - start_time
+    print("Optimization completed.")
     
     # Display performance results
     display_performance_results(

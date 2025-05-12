@@ -90,30 +90,21 @@ def select_cities_interactively(cities_names, num_cities):
     return start_city, selected_cities
 
 
-def select_cities_randomly(cities_names, num_cities, start_city=None):
+def select_cities_randomly(cities_names, num_cities):
     """
     Randomly select cities for the tour.
     
     Args:
         cities_names (list): List of city names
         num_cities (int): Total number of available cities
-        start_city (int, optional): Index of the starting city. If None, one is randomly selected.
         
     Returns:
         tuple: (int: starting city index, list: indices of additional cities to visit)
     """
-    # Use a specified start city if provided, otherwise random
-    if start_city is not None:
-        if start_city < 0 or start_city >= num_cities:
-            print(f"Warning: Start city index {start_city} is out of range (0-{num_cities-1}). Using random start city.")
-            start_city = np.random.randint(0, num_cities)
-        else:
-            print(f"Using city {start_city} ({cities_names[start_city]}) as starting point.")
-    else:
-        # Select a random starting city
-        start_city = np.random.randint(0, num_cities)
-        print(f"Randomly selected {cities_names[start_city]} as the starting city.")
-    
+    # Select a random starting city
+    start_city = np.random.randint(0, num_cities)
+    print(f"Randomly selected {cities_names[start_city]} as the starting city.")
+
     # First create a list of all cities except the starting city
     all_cities_except_start = list(range(num_cities))
     all_cities_except_start.remove(start_city)
@@ -129,8 +120,33 @@ def select_cities_randomly(cities_names, num_cities, start_city=None):
         replace=False
     ).tolist()
     
-    print(f"\nRandomly selected {len(selected_cities)} cities to visit (excluding starting city):")
-    for idx in selected_cities:
-        print(f"  - {cities_names[idx]}")
-    
     return start_city, selected_cities
+
+
+def display_tour_cities(tour, cities_names, is_interactive=False, initial_length=None):
+    """
+    Display the selected cities in a horizontal format.
+    
+    Args:
+        tour (list): The tour containing city indices
+        cities_names (list): List of all city names
+        is_interactive (bool): Whether the tour was selected interactively
+        initial_length (float, optional): Initial tour length to display
+    """
+    # Get the names of the selected cities (excluding the starting city)
+    selected_city_names = [cities_names[i] for i in tour[1:]]
+    
+    # Format for display with cities side by side
+    city_mode = "Selected" if is_interactive else "Randomly selected"
+    print(f"{city_mode} {len(selected_city_names)} cities to visit:")
+    
+    # Display cities in rows with multiple cities per row
+    cities_per_row = 4
+    for i in range(0, len(selected_city_names), cities_per_row):
+        row_cities = selected_city_names[i:i+cities_per_row]
+        formatted_cities = ", ".join(row_cities)
+        print(f"  {formatted_cities}")
+    
+    # Display initial tour length if provided
+    if initial_length is not None:
+        print(f"Initial Tour Length: {initial_length:.2f}")

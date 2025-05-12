@@ -54,14 +54,7 @@ def parse_arguments():
         default=None,
         help="Stop after N iterations without improvement"
     )
-    
-    # Move strategy options
-    parser.add_argument(
-        "--no-swap",
-        action="store_true",
-        help="Use only 2-opt moves (no city swaps)"
-    )
-    
+
     # Visualization options
     parser.add_argument(
         "--save-plot",
@@ -92,23 +85,10 @@ def parse_arguments():
     )
     
     parser.add_argument(
-        "--start-city",
-        type=int,
-        help="Starting city index (random if not specified)"
-    )
-    
-    parser.add_argument(
         "--tour-selection",
         action="store_true",
         default=False,
         help="When True, prompts for city selection. When False (default), randomly selects cities."
-    )
-    
-    # Misc options
-    parser.add_argument(
-        "--verbose", "-v",
-        action="store_true",
-        help="Print detailed progress information"
     )
     
     args = parser.parse_args()
