@@ -66,3 +66,18 @@ def cities_to_array(cities_dict=None):
     cities_names = list(cities_dict.keys())
     coordinates = np.array([cities_dict[name] for name in cities_names])
     return coordinates, cities_names
+
+
+def load_city_data():
+    """
+    Load and prepare Moroccan city data.
+    
+    Returns:
+        tuple: (numpy.ndarray of city coordinates, list of city names, int: number of cities)
+    """
+    print("\nLoading Moroccan city data...")
+    cities_dict, num_cities = get_cities()
+    cities_coordinates, cities_names = cities_to_array(cities_dict)
+    print(f"Loaded {num_cities} Moroccan cities for TSP.")
+    
+    return cities_coordinates, cities_names, num_cities

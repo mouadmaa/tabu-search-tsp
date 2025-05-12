@@ -142,7 +142,7 @@ def visualize_cities(cities_coordinates, cities_names=None, title="Moroccan Citi
     # Add a simple north arrow in the top left corner
     arrow_length = (max_lat - min_lat) * 0.05  # Reduced size
     compass_x = min_lon + (max_lon - min_lon) * 0.05  # Position near the left
-    compass_y = max_lat - (max_lat - min_lat) * 0.06  # Position near the top
+    compass_y = max_lat - (max_lat - min_lat) * 0.07  # Position near the top
 
     # Small white background circle
     compass_circle = plt.Circle((compass_x, compass_y), arrow_length * 0.9,
@@ -186,3 +186,29 @@ def visualize_cities(cities_coordinates, cities_names=None, title="Moroccan Citi
     except Exception as e:
         print(f"Warning: Could not display plot ({str(e)}).")
         plt.close()
+
+
+def visualize_results(cities_coordinates, cities_names, tour, optimized_tour, is_interactive):
+    """
+    Visualize the optimized tour on a map.
+    
+    Args:
+        cities_coordinates (numpy.ndarray): Array of city coordinates
+        cities_names (list): List of city names
+        tour (list): Original tour (needed for start city)
+        optimized_tour (list): Optimized tour to visualize
+        is_interactive (bool): Whether the tour was created interactively
+    """
+    tour_mode = "User-Selected" if is_interactive else f"Random ({len(tour)} cities)"
+    title = f"Moroccan Cities TSP - Tabu Search Optimized Tour ({tour_mode})"
+    
+    print(f"\nVisualizing Moroccan cities with optimized tour...")
+    print("Displaying visualization. Close the window to exit.")
+    
+    visualize_cities(
+        cities_coordinates=cities_coordinates,
+        cities_names=cities_names,
+        title=title,
+        route=optimized_tour,
+        start_city_idx=tour[0]
+    )

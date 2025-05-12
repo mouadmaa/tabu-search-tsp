@@ -6,6 +6,8 @@ providing both interactive user selection and random selection functionality.
 """
 
 import numpy as np
+from core.tour import nearest_neighbor_tour
+from algorithms.tabu_search import calculate_tour_length
 
 
 def select_cities_interactively(cities_names, num_cities):
@@ -109,9 +111,9 @@ def select_cities_randomly(cities_names, num_cities):
     all_cities_except_start = list(range(num_cities))
     all_cities_except_start.remove(start_city)
     
-    # Randomly decide how many cities to visit (between 5 and num_cities-1)
+    # Randomly decide how many cities to visit (between 8 and num_cities-1)
     # The -1 is because we already have the starting city
-    num_cities_to_select = np.random.randint(5, num_cities)
+    num_cities_to_select = np.random.randint(8, num_cities)
     
     # Randomly select the cities
     selected_cities = np.random.choice(
@@ -150,3 +152,32 @@ def display_tour_cities(tour, cities_names, is_interactive=False, initial_length
     # Display initial tour length if provided
     if initial_length is not None:
         print(f"Initial Tour Length: {initial_length:.2f}")
+
+
+def create_initial_tour(distance_matrix, cities_names, num_cities, interactive_mode):
+    """
+    Create initial tour using nearest neighbor approach with selected cities.
+    
+    Args:
+        distance_matrix (numpy.ndarray): Matrix of distances between cities
+        cities_names (list): List of city names
+        num_cities (int): Total number of available cities
+        interactive_mode (bool): Whether to select cities interactively
+        
+    Returns:
+        tuple: (list: tour, float: initial tour length, int: start city index)
+    """
+    print("\nGenerating nearest neighbor tour...")
+    
+    if interactive_mode:
+        start_city, selected_cities = select_cities_interactively(cities_names, num_cities)
+    else:
+        start_city, selected_cities = select_cities_randomly(cities_names, num_cities)
+    
+    tour = nearest_neighbor_tour(distance_matrix, start_city, selected_cities)
+    initial_length = calculate_tour_length(tour, distance_matrix)
+    
+    # Display tour information
+    display_tour_cities(tour, cities_names, is_interactive=interactive_mode, initial_length=initial_length)
+    
+    return tour, initial_length, start_city
