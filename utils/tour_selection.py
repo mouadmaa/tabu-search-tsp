@@ -109,9 +109,9 @@ def select_cities_randomly(cities_names, num_cities):
     all_cities_except_start = list(range(num_cities))
     all_cities_except_start.remove(start_city)
     
-    # Randomly decide how many cities to visit (between 2 and num_cities-1)
+    # Randomly decide how many cities to visit (between 5 and num_cities-1)
     # The -1 is because we already have the starting city
-    num_cities_to_select = np.random.randint(2, num_cities)
+    num_cities_to_select = np.random.randint(5, num_cities)
     
     # Randomly select the cities
     selected_cities = np.random.choice(

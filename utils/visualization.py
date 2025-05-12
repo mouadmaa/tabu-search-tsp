@@ -11,17 +11,14 @@ from core.tour import calculate_tour_length
 
 
 def visualize_cities(cities_coordinates, cities_names=None, title="Moroccan Cities", 
-                    save_to_file=False, filename="morocco_cities.png", route=None,
-                    start_city_idx=None):
+                    route=None, start_city_idx=None):
     """
-    Visualize the cities on a map-like display. Can display interactively or save to file.
+    Visualize the cities on a map-like display.
     
     Args:
         cities_coordinates (numpy.ndarray): Array of shape (num_cities, 2) with city coordinates
         cities_names (list, optional): List of city names corresponding to the coordinates
         title (str): Plot title
-        save_to_file (bool): Whether to save the plot to a file instead of displaying
-        filename (str): Filename to save the plot if save_to_file is True
         route (list, optional): List of city indices representing a TSP route
         start_city_idx (int, optional): Index of the starting city to highlight
     """
@@ -180,20 +177,12 @@ def visualize_cities(cities_coordinates, cities_names=None, title="Moroccan Citi
                  bbox=dict(boxstyle="round,pad=0.6", fc="white", ec="gray", alpha=0.7),
                  zorder=4)
 
-    # No legend needed as we've removed labels
-    
     # Add more margin space around the entire plot
     plt.tight_layout(pad=2)
 
-    if save_to_file:
-        plt.savefig(filename)
+    # Display the plot
+    try:
+        plt.show()
+    except Exception as e:
+        print(f"Warning: Could not display plot ({str(e)}).")
         plt.close()
-        print(f"City plot saved to {filename}")
-    else:
-        try:
-            plt.show()
-        except Exception as e:
-            print(f"Warning: Could not display plot ({str(e)}). Saving to file instead.")
-            plt.savefig(filename)
-            plt.close()
-            print(f"City plot saved to {filename}")

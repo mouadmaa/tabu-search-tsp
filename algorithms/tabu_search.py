@@ -320,7 +320,14 @@ def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iteratio
                 
             # Call progress callback if provided
             if progress_callback:
+                # Pass move_info properly
+                move_info_type = best_move_info[0] if best_move_info else None
                 progress_callback(iteration, current_tour, current_length, best_tour, best_length, best_move_info)
+                
+                # Track if this was an improvement move
+                if current_length < best_length:
+                    # This is tracked separately in best_move_types but we'll handle it in the callback
+                    pass
         else:
             # If no valid move was found, we might be trapped in a local optimum
             

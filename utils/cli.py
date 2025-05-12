@@ -55,20 +55,6 @@ def parse_arguments():
         help="Stop after N iterations without improvement"
     )
 
-    # Visualization options
-    parser.add_argument(
-        "--save-plot",
-        action="store_true",
-        help="Save visualization to file instead of displaying"
-    )
-    
-    parser.add_argument(
-        "--output", "-o",
-        type=str,
-        default="morocco_cities.png",
-        help="Output filename for visualization"
-    )
-    
     # Performance visualization options
     parser.add_argument(
         "--show-performance",
@@ -83,7 +69,8 @@ def parse_arguments():
         metavar="FILENAME",
         help="Save the performance report to a file"
     )
-    
+
+    # Tour selection options
     parser.add_argument(
         "--tour-selection",
         action="store_true",
