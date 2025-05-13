@@ -104,7 +104,7 @@ def display_tour_cities(tour, cities_names, is_interactive=False, initial_length
         print(f"  {formatted_cities}")
 
     if initial_length is not None:
-        print(f"Initial Tour Length: {initial_length:.2f}")
+        print(f"Initial Tour Distance: {initial_length:.2f}")
 
 
 def create_initial_tour(distance_matrix, cities_names, num_cities, interactive_mode):

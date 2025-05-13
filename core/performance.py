@@ -61,9 +61,9 @@ class PerformanceTracker:
         times_ms = [t * 1000 for t in self.times]
     
         ax_main.plot(self.iterations, self.best_tour_lengths, 'r-', linewidth=2,
-                    label='Best Tour Length')
+                    label='Best Tour Distance')
         ax_main.plot(self.iterations, self.tour_lengths, 'b-', alpha=0.3,
-                    label='Current Tour Length')
+                    label='Current Tour Distance')
     
         initial_length = self.initial_tour_length if self.initial_tour_length is not None else self.tour_lengths[0]
         final_length = self.best_tour_lengths[-1]
@@ -95,8 +95,8 @@ class PerformanceTracker:
         stats = (
             f"{start_city_info}"
             f"{visited_cities_info}"
-            f"Initial length      : {initial_length:.1f}\n\n"
-            f"Final length        : {final_length:.1f}\n\n"
+            f"Initial distance      : {initial_length:.1f}\n\n"
+            f"Final distance        : {final_length:.1f}\n\n"
             f"Improvement     : {improvement:.1f} ({improvement_percentage:.1f}%)\n\n"
             f"Total iterations   : {len(self.iterations)}\n\n"
             f"Runtime              : {self.times[-1]*1000:.1f}ms ({iterations_per_second:.1f} iter/s)\n\n"
@@ -104,7 +104,7 @@ class PerformanceTracker:
         )
     
         ax_main.set_xlabel('Iterations')
-        ax_main.set_ylabel('Tour Length')
+        ax_main.set_ylabel('Tour Distance')
         ax_main.set_title(title or 'Tabu Search Performance', pad=15, fontsize=14)
         ax_main.grid(True, linestyle='--', alpha=0.6)
         ax_main.legend(loc='upper right')
@@ -200,7 +200,7 @@ def display_performance_results(tracker, initial_length, optimized_length, itera
     
     print("\nTabu Search Optimization Summary:")
     print("-" * 50)
-    print(f"Tour Length:     {initial_length:.2f} → {optimized_length:.2f}")
+    print(f"Tour Distance:     {initial_length:.2f} → {optimized_length:.2f}")
     print(f"Improvement:     {improvement:.2f} ({improvement_percentage:.2f}%)")
     print(f"Iterations:      {iterations}")
     print(f"Runtime:         {optimization_time:.2f} seconds")

@@ -138,7 +138,7 @@ def visualize_cities(cities_coordinates, cities_names=None, title="Moroccan Citi
 
         route_info = (f"Starting City: {cities_names[start_city_idx]}"
                       f"\nVisited Cities: {len(route)}"
-                      f"\nTour Length: {tour_length:.2f} units")
+                      f"\nTour Distance: {tour_length:.2f} units")
         plt.text(info_x, info_y, route_info,
                  fontsize=10, ha='left', va='center',
                  bbox=dict(boxstyle="round,pad=0.6", fc="white", ec="gray", alpha=0.7),

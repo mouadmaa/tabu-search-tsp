@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="088a2c5d-3d27-4da5-8dc7-bc876d2b2a53" name="Changes" comment="Refactor city data loading and command-line interface: update city data loading messages for clarity, simplify argument parsing, and remove unused options.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/cli.py" afterDir="false" />
+    <list default="true" id="088a2c5d-3d27-4da5-8dc7-bc876d2b2a53" name="Changes" comment="Enhance command-line interface for TSP: add new optimization parameters, improve input validation for tabu tenure, and update help messages for clarity">
+      <change beforePath="$PROJECT_DIR$/core/performance.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/performance.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/visualization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/tour_selection.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/tour_selection.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -215,7 +216,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747137944080</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Enhance command-line interface for TSP: add new optimization parameters, improve input validation for tabu tenure, and update help messages for clarity">
+      <option name="closed" value="true" />
+      <created>1747142502078</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1747142502078</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -246,6 +255,7 @@
     <MESSAGE value="Refactor city data handling and command-line interface: streamline city data loading, enhance performance tracking with starting city and visited cities, and simplify command-line argument parsing." />
     <MESSAGE value="Fix capitalization in TSP title and update visualization title for consistency" />
     <MESSAGE value="Refactor city data loading and command-line interface: update city data loading messages for clarity, simplify argument parsing, and remove unused options." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor city data loading and command-line interface: update city data loading messages for clarity, simplify argument parsing, and remove unused options." />
+    <MESSAGE value="Enhance command-line interface for TSP: add new optimization parameters, improve input validation for tabu tenure, and update help messages for clarity" />
+    <option name="LAST_COMMIT_MESSAGE" value="Enhance command-line interface for TSP: add new optimization parameters, improve input validation for tabu tenure, and update help messages for clarity" />
   </component>
 </project>
