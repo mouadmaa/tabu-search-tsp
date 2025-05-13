@@ -108,6 +108,7 @@ def tabu_search_optimization(tour, distance_matrix, tabu_tenure=10, max_iteratio
                              time_limit=60, aspiration_enabled=True, max_no_improvement=None,
                              intensification_threshold=20, diversification_threshold=50,
                              dynamic_tabu=False, progress_callback=None):
+
     start_time = time.time()
     num_cities = len(tour)
 

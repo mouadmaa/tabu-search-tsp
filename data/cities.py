@@ -39,9 +39,9 @@ def cities_to_array(cities_dict=None):
 
 
 def load_city_data():
-    print("\nLoading Moroccan city data...")
+    print("\nLoading cities data...")
     cities_dict, num_cities = get_cities()
     cities_coordinates, cities_names = cities_to_array(cities_dict)
-    print(f"Loaded {num_cities} Moroccan cities for TSP.")
+    print(f"Loaded {num_cities} cities for TSP.")
     
     return cities_coordinates, cities_names, num_cities

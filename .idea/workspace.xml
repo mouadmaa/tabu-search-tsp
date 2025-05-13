@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="088a2c5d-3d27-4da5-8dc7-bc876d2b2a53" name="Changes" comment="Refactor city data handling and command-line interface: streamline city data loading, enhance performance tracking with starting city and visited cities, and simplify command-line argument parsing.">
+    <list default="true" id="088a2c5d-3d27-4da5-8dc7-bc876d2b2a53" name="Changes" comment="Fix capitalization in TSP title and update visualization title for consistency">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/algorithms/tabu_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms/tabu_search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/cities.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/cities.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/cli.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +80,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--tour-selection" />
+      <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -196,7 +198,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747130474662</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Fix capitalization in TSP title and update visualization title for consistency">
+      <option name="closed" value="true" />
+      <created>1747131697866</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1747131697866</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -225,6 +235,7 @@
     <MESSAGE value="Refactor command-line interface for TSP: remove unused visualization options, streamline city and tour selection processes, and enhance performance tracking integration" />
     <MESSAGE value="Refactor city data loading and performance tracking: consolidate city data loading into a single function, enhance performance tracker to include starting city and visited cities information, and update related function calls." />
     <MESSAGE value="Refactor city data handling and command-line interface: streamline city data loading, enhance performance tracking with starting city and visited cities, and simplify command-line argument parsing." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor city data handling and command-line interface: streamline city data loading, enhance performance tracking with starting city and visited cities, and simplify command-line argument parsing." />
+    <MESSAGE value="Fix capitalization in TSP title and update visualization title for consistency" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix capitalization in TSP title and update visualization title for consistency" />
   </component>
 </project>
