@@ -9,7 +9,7 @@ from core.visualization import visualize_results
 
 
 def main():
-    print("\nTraveling Salesman Problem Using Tabu Search optimization\n\n")
+    print("\nTraveling Salesman Problem Using Tabu Search Optimization\n")
 
     args = parse_arguments()
 

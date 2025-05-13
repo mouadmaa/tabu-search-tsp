@@ -154,16 +154,13 @@ def visualize_cities(cities_coordinates, cities_names=None, title="Moroccan Citi
 
 
 def visualize_results(cities_coordinates, cities_names, tour, optimized_tour, is_interactive):
-    tour_mode = "User-Selected" if is_interactive else f"Random ({len(tour)} cities)"
-    title = f"Moroccan Cities TSP - Tabu Search Optimized Tour ({tour_mode})"
-    
     print(f"\nVisualizing Moroccan cities with optimized tour...")
     print("Displaying visualization. Close the window to exit.")
     
     visualize_cities(
         cities_coordinates=cities_coordinates,
         cities_names=cities_names,
-        title=title,
+        title="Traveling Salesman Problem Using Tabu Search Optimization",
         route=optimized_tour,
         start_city_idx=tour[0]
     )

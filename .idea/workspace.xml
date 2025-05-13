@@ -4,23 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="088a2c5d-3d27-4da5-8dc7-bc876d2b2a53" name="Changes" comment="Refactor city data loading and performance tracking: consolidate city data loading into a single function, enhance performance tracker to include starting city and visited cities information, and update related function calls.">
+    <list default="true" id="088a2c5d-3d27-4da5-8dc7-bc876d2b2a53" name="Changes" comment="Refactor city data handling and command-line interface: streamline city data loading, enhance performance tracking with starting city and visited cities, and simplify command-line argument parsing.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/algorithms/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/algorithms/tabu_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms/tabu_search.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/distance.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/distance.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/performance.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/performance.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/tour.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/tour.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/visualization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/cities.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/cities.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/cli.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/tour_selection.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/tour_selection.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +78,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--show-performance" />
+      <option name="PARAMETERS" value="--tour-selection" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -202,7 +188,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747052534191</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Refactor city data handling and command-line interface: streamline city data loading, enhance performance tracking with starting city and visited cities, and simplify command-line argument parsing.">
+      <option name="closed" value="true" />
+      <created>1747130474662</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1747130474662</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -230,6 +224,7 @@
     <MESSAGE value="Refactor command-line interface for TSP: remove unused options, streamline city selection process, and enhance performance tracking display" />
     <MESSAGE value="Refactor command-line interface for TSP: remove unused visualization options, streamline city and tour selection processes, and enhance performance tracking integration" />
     <MESSAGE value="Refactor city data loading and performance tracking: consolidate city data loading into a single function, enhance performance tracker to include starting city and visited cities information, and update related function calls." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor city data loading and performance tracking: consolidate city data loading into a single function, enhance performance tracker to include starting city and visited cities information, and update related function calls." />
+    <MESSAGE value="Refactor city data handling and command-line interface: streamline city data loading, enhance performance tracking with starting city and visited cities, and simplify command-line argument parsing." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor city data handling and command-line interface: streamline city data loading, enhance performance tracking with starting city and visited cities, and simplify command-line argument parsing." />
   </component>
 </project>
