@@ -99,7 +99,8 @@ class PerformanceTracker:
             f"Final distance        : {final_length:.1f}\n\n"
             f"Improvement     : {improvement:.1f} ({improvement_percentage:.1f}%)\n\n"
             f"Total iterations   : {len(self.iterations)}\n\n"
-            f"Runtime              : {self.times[-1]*1000:.1f}ms ({iterations_per_second:.1f} iter/s)\n\n"
+            f"Runtime              : {self.times[-1]*1000:.1f}ms\n\n"
+            # f" ({iterations_per_second:.1f} iter/s)\n\n"
             f"2-opt moves       : {self.move_counts.get('2opt', 0)}"
         )
     
@@ -204,8 +205,8 @@ def display_performance_results(tracker, initial_length, optimized_length, itera
     print(f"Improvement:     {improvement:.2f} ({improvement_percentage:.2f}%)")
     print(f"Iterations:      {iterations}")
     print(f"Runtime:         {optimization_time:.2f} seconds")
-    if iterations > 0 and optimization_time > 0:
-        print(f"Speed:          {iterations/optimization_time:.2f} iterations/second")
+    # if iterations > 0 and optimization_time > 0:
+    #     print(f"Speed:          {iterations/optimization_time:.2f} iterations/second")
     print(f"2-opt Moves:     {tracker.move_counts.get('2opt', 0)}")
     print("-" * 50)
     

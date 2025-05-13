@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="088a2c5d-3d27-4da5-8dc7-bc876d2b2a53" name="Changes" comment="Enhance command-line interface for TSP: add new optimization parameters, improve input validation for tabu tenure, and update help messages for clarity">
+    <list default="true" id="088a2c5d-3d27-4da5-8dc7-bc876d2b2a53" name="Changes" comment="Update performance metrics terminology: replace 'Tour Length' with 'Tour Distance' in performance reports and visualizations for consistency">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/performance.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/performance.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/visualization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/tour_selection.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/tour_selection.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,7 +224,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747142502078</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Update performance metrics terminology: replace 'Tour Length' with 'Tour Distance' in performance reports and visualizations for consistency">
+      <option name="closed" value="true" />
+      <created>1747143150315</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1747143150315</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -256,6 +264,7 @@
     <MESSAGE value="Fix capitalization in TSP title and update visualization title for consistency" />
     <MESSAGE value="Refactor city data loading and command-line interface: update city data loading messages for clarity, simplify argument parsing, and remove unused options." />
     <MESSAGE value="Enhance command-line interface for TSP: add new optimization parameters, improve input validation for tabu tenure, and update help messages for clarity" />
-    <option name="LAST_COMMIT_MESSAGE" value="Enhance command-line interface for TSP: add new optimization parameters, improve input validation for tabu tenure, and update help messages for clarity" />
+    <MESSAGE value="Update performance metrics terminology: replace 'Tour Length' with 'Tour Distance' in performance reports and visualizations for consistency" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update performance metrics terminology: replace 'Tour Length' with 'Tour Distance' in performance reports and visualizations for consistency" />
   </component>
 </project>
