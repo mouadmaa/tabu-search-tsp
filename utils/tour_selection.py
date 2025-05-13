@@ -1,40 +1,22 @@
-"""
-Tour selection module for the Traveling Salesman Problem.
-
-This module handles the selection of cities for the TSP tour,
-providing both interactive user selection and random selection functionality.
-"""
-
 import numpy as np
 from core.tour import nearest_neighbor_tour
 from algorithms.tabu_search import calculate_tour_length
 
 
 def select_cities_interactively(cities_names, num_cities):
-    """
-    Prompt the user to select cities interactively.
-    
-    Args:
-        cities_names (list): List of city names
-        num_cities (int): Total number of available cities
-        
-    Returns:
-        tuple: (int: starting city index, list: indices of additional cities to visit)
-    """
     print("\nInteractive Tour Selection Mode")
     print("------------------------------")
     print("Available cities:")
     for i, name in enumerate(cities_names):
         print(f"  {i+1}: {name}")
     
-    # Get starting city with validation
     valid_start_city = False
     start_city = None
     
     while not valid_start_city:
         try:
             start_city_input = input("\nEnter the index (1-22) of your starting city: ")
-            start_idx = int(start_city_input) - 1  # Convert to 0-based index
+            start_idx = int(start_city_input) - 1
             
             if 0 <= start_idx < num_cities:
                 start_city = start_idx
@@ -45,7 +27,6 @@ def select_cities_interactively(cities_names, num_cities):
         except ValueError:
             print("Error: Please enter a valid integer.")
     
-    # Let user select additional cities to visit
     print("\nNow select additional cities for your tour (at least 2 cities).")
     print("Enter 'q' when you're done selecting cities.")
     
@@ -55,16 +36,15 @@ def select_cities_interactively(cities_names, num_cities):
             city_input = input(f"Enter city index (1-{num_cities}, excluding {start_city+1}) or 'q' to finish: ")
             
             if city_input.lower() == 'q':
-                # Check if we have at least 2 selected cities
                 if len(selected_cities) >= 2:
                     break
                 else:
                     print("Error: You must select at least 2 additional cities.")
                     continue
             
-            city_idx = int(city_input) - 1  # Convert to 0-based index
+            city_idx = int(city_input) - 1
             
-            # Validate the selection
+
             if city_idx == start_city:
                 print(f"Error: You've already selected {cities_names[start_city]} as your starting city.")
             elif 0 <= city_idx < num_cities:
@@ -77,6 +57,7 @@ def select_cities_interactively(cities_names, num_cities):
             else:
                 print(f"Error: Please enter a valid index between 1 and {num_cities}.")
         except ValueError:
+            city_input = ""
             if city_input.lower() == 'q':
                 if len(selected_cities) >= 2:
                     break
@@ -93,29 +74,14 @@ def select_cities_interactively(cities_names, num_cities):
 
 
 def select_cities_randomly(cities_names, num_cities):
-    """
-    Randomly select cities for the tour.
-    
-    Args:
-        cities_names (list): List of city names
-        num_cities (int): Total number of available cities
-        
-    Returns:
-        tuple: (int: starting city index, list: indices of additional cities to visit)
-    """
-    # Select a random starting city
     start_city = np.random.randint(0, num_cities)
     print(f"Randomly selected {cities_names[start_city]} as the starting city.")
 
-    # First create a list of all cities except the starting city
     all_cities_except_start = list(range(num_cities))
     all_cities_except_start.remove(start_city)
-    
-    # Randomly decide how many cities to visit (between 8 and num_cities-1)
-    # The -1 is because we already have the starting city
+
     num_cities_to_select = np.random.randint(8, num_cities)
-    
-    # Randomly select the cities
+
     selected_cities = np.random.choice(
         all_cities_except_start, 
         size=min(num_cities_to_select, len(all_cities_except_start)), 
@@ -126,47 +92,22 @@ def select_cities_randomly(cities_names, num_cities):
 
 
 def display_tour_cities(tour, cities_names, is_interactive=False, initial_length=None):
-    """
-    Display the selected cities in a horizontal format.
-    
-    Args:
-        tour (list): The tour containing city indices
-        cities_names (list): List of all city names
-        is_interactive (bool): Whether the tour was selected interactively
-        initial_length (float, optional): Initial tour length to display
-    """
-    # Get the names of the selected cities (excluding the starting city)
     selected_city_names = [cities_names[i] for i in tour[1:]]
-    
-    # Format for display with cities side by side
+
     city_mode = "Selected" if is_interactive else "Randomly selected"
     print(f"{city_mode} {len(selected_city_names)} cities to visit:")
-    
-    # Display cities in rows with multiple cities per row
+
     cities_per_row = 4
     for i in range(0, len(selected_city_names), cities_per_row):
         row_cities = selected_city_names[i:i+cities_per_row]
         formatted_cities = ", ".join(row_cities)
         print(f"  {formatted_cities}")
-    
-    # Display initial tour length if provided
+
     if initial_length is not None:
         print(f"Initial Tour Length: {initial_length:.2f}")
 
 
 def create_initial_tour(distance_matrix, cities_names, num_cities, interactive_mode):
-    """
-    Create initial tour using nearest neighbor approach with selected cities.
-    
-    Args:
-        distance_matrix (numpy.ndarray): Matrix of distances between cities
-        cities_names (list): List of city names
-        num_cities (int): Total number of available cities
-        interactive_mode (bool): Whether to select cities interactively
-        
-    Returns:
-        tuple: (list: tour, float: initial tour length, int: start city index)
-    """
     print("\nGenerating nearest neighbor tour...")
     
     if interactive_mode:
@@ -176,8 +117,7 @@ def create_initial_tour(distance_matrix, cities_names, num_cities, interactive_m
     
     tour = nearest_neighbor_tour(distance_matrix, start_city, selected_cities)
     initial_length = calculate_tour_length(tour, distance_matrix)
-    
-    # Display tour information
+
     display_tour_cities(tour, cities_names, is_interactive=interactive_mode, initial_length=initial_length)
     
     return tour, initial_length, start_city

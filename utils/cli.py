@@ -1,32 +1,12 @@
-"""
-Command-line interface utilities for the Traveling Salesman Problem.
-Contains functions for parsing and handling command-line arguments.
-"""
-
-import argparse
-
-
 import argparse
 
 
 def parse_arguments():
-    """
-    Parse command-line arguments for the TSP visualization and tabu search optimization.
-    
-    Focuses on key parameters that most significantly affect solution quality:
-    - Iterations and tabu tenure to balance exploration vs. exploitation
-    - Time limits for practical runtime constraints
-    - Visualization options for result display
-    
-    Returns:
-        argparse.Namespace: Parsed arguments
-    """
     parser = argparse.ArgumentParser(
         description='Traveling Salesman Problem solver using Tabu Search optimization',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     
-    # Core tabu search parameters
     parser.add_argument(
         "--max-iterations", "-i",
         type=int,
@@ -55,7 +35,6 @@ def parse_arguments():
         help="Stop after N iterations without improvement"
     )
 
-    # Performance visualization options
     parser.add_argument(
         "--show-performance",
         action="store_true",
@@ -70,7 +49,6 @@ def parse_arguments():
         help="Save the performance report to a file"
     )
 
-    # Tour selection options
     parser.add_argument(
         "--tour-selection",
         action="store_true",
@@ -80,7 +58,6 @@ def parse_arguments():
     
     args = parser.parse_args()
     
-    # Process the tabu tenure parameter
     if args.tabu_tenure.lower() not in ["sqrt", "log"]:
         try:
             args.tabu_tenure = int(args.tabu_tenure)

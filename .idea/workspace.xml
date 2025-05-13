@@ -4,10 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="088a2c5d-3d27-4da5-8dc7-bc876d2b2a53" name="Changes" comment="Enhance command-line interface for TSP: add interactive tour selection, allow user to choose starting city and additional cities, and update nearest neighbor tour generation">
-      <change afterPath="$PROJECT_DIR$/utils/performance_manager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/tour_selection.py" afterDir="false" />
+    <list default="true" id="088a2c5d-3d27-4da5-8dc7-bc876d2b2a53" name="Changes" comment="Refactor city data loading and performance tracking: consolidate city data loading into a single function, enhance performance tracker to include starting city and visited cities information, and update related function calls.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/algorithms/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/algorithms/tabu_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms/tabu_search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/distance.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/distance.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/performance.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/performance.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/tour.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/tour.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/visualization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/cities.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/cities.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/cli.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/tour_selection.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/tour_selection.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +28,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -40,20 +58,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/maaro/Documents/My Projects/tabu-search-tsp&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "presentation",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/maaro/Documents/My Projects/tabu-search-tsp",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "settings.sync",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/core" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="tabu-search-tsp" />
@@ -69,7 +92,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="" />
+      <option name="PARAMETERS" value="--show-performance" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -86,7 +109,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-2ee2454479a3-9cdd278e9d02-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-251.25410.122" />
+        <option value="bundled-python-sdk-348a24fa61fa-5312c7369657-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-251.23774.444" />
       </set>
     </attachedChunks>
   </component>
@@ -155,7 +178,31 @@
       <option name="project" value="LOCAL" />
       <updated>1747001213302</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Refactor command-line interface for TSP: remove unused options, streamline city selection process, and enhance performance tracking display">
+      <option name="closed" value="true" />
+      <created>1747046913392</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1747046913392</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Refactor command-line interface for TSP: remove unused visualization options, streamline city and tour selection processes, and enhance performance tracking integration">
+      <option name="closed" value="true" />
+      <created>1747051053177</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1747051053177</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Refactor city data loading and performance tracking: consolidate city data loading into a single function, enhance performance tracker to include starting city and visited cities information, and update related function calls.">
+      <option name="closed" value="true" />
+      <created>1747052534191</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1747052534191</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -180,6 +227,9 @@
     <MESSAGE value="Enhance visualization for TSP: add special styling for edges from the starting city and maintain consistent styling for other edges" />
     <MESSAGE value="Enhance performance tracking visualization: improve plot layout, update performance metrics display, and refine stats presentation" />
     <MESSAGE value="Enhance command-line interface for TSP: add interactive tour selection, allow user to choose starting city and additional cities, and update nearest neighbor tour generation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Enhance command-line interface for TSP: add interactive tour selection, allow user to choose starting city and additional cities, and update nearest neighbor tour generation" />
+    <MESSAGE value="Refactor command-line interface for TSP: remove unused options, streamline city selection process, and enhance performance tracking display" />
+    <MESSAGE value="Refactor command-line interface for TSP: remove unused visualization options, streamline city and tour selection processes, and enhance performance tracking integration" />
+    <MESSAGE value="Refactor city data loading and performance tracking: consolidate city data loading into a single function, enhance performance tracker to include starting city and visited cities information, and update related function calls." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor city data loading and performance tracking: consolidate city data loading into a single function, enhance performance tracker to include starting city and visited cities information, and update related function calls." />
   </component>
 </project>

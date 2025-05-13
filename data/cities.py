@@ -1,27 +1,8 @@
-"""
-Module containing Moroccan city data for the Traveling Salesman Problem.
-
-This module provides functions to access a predefined set of Moroccan cities
-with their coordinates in (longitude, latitude) format, suitable for
-visualization and TSP algorithm implementation.
-"""
-
 import numpy as np
 
 
 def get_cities():
-    """
-    Returns a dictionary with major Moroccan cities and their simplified coordinates
-    in a longitude/latitude format, along with the number of cities.
-    
-    Returns:
-        tuple: (dict: Dictionary mapping city names to (longitude, latitude) coordinate tuples,
-               int: Number of cities)
-    """
-    # Morocco longitude range: approximately -10 to -1
-    # Morocco latitude range: approximately 30 to 36
-    # Coordinates are simplified but proportionally resemble real positions
-    morocco_cities = {
+    cities = {
         "Tangier": (-5.8, 35.8),
         "Tetouan": (-5.4, 35.6),
         "Larache": (-6.2, 35.2),
@@ -45,21 +26,10 @@ def get_cities():
         "Ifrane": (-5.1, 33.5),
         "Errachidia": (-4.4, 32.0),
     }
-    return morocco_cities, len(morocco_cities)
+    return cities, len(cities)
 
 
 def cities_to_array(cities_dict=None):
-    """
-    Converts the dictionary of Moroccan cities to a NumPy array format
-    suitable for TSP algorithms and returns a list of city names in the same order.
-    
-    Args:
-        cities_dict (dict, optional): Dictionary mapping city names to (x,y) coordinates.
-                                     If None, uses the default Morocco cities.
-        
-    Returns:
-        tuple: (numpy.ndarray of shape (num_cities, 2), list of city names)
-    """
     if cities_dict is None:
         cities_dict, _ = get_cities()
         
@@ -69,12 +39,6 @@ def cities_to_array(cities_dict=None):
 
 
 def load_city_data():
-    """
-    Load and prepare Moroccan city data.
-    
-    Returns:
-        tuple: (numpy.ndarray of city coordinates, list of city names, int: number of cities)
-    """
     print("\nLoading Moroccan city data...")
     cities_dict, num_cities = get_cities()
     cities_coordinates, cities_names = cities_to_array(cities_dict)
